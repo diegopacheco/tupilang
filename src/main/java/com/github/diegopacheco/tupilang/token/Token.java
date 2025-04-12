@@ -18,7 +18,9 @@ public class Token {
 
         // Keywords
         IF, ELSE, VAL, DEF, RETURN, PRINT, TRUE, FALSE,
-        INT_TYPE,
+
+        // Types
+        INT_TYPE, VOID_TYPE,
 
         EOF
     }

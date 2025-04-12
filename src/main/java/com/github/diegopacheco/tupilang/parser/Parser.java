@@ -1,5 +1,6 @@
 package com.github.diegopacheco.tupilang.parser;
 
+
 import com.github.diegopacheco.tupilang.ast.*;
 import com.github.diegopacheco.tupilang.token.Token;
 import java.util.*;
@@ -104,9 +105,11 @@ public class Parser {
 
             consume(Token.Type.RPAREN, "Expected ')'");
 
-            // Parse return type
+            // Parse return type - support void type
             String returnType;
-            if (check(Token.Type.INT_TYPE)) {
+            if (check(Token.Type.VOID_TYPE)) {
+                returnType = advance().text;
+            } else if (check(Token.Type.INT_TYPE)) {
                 returnType = advance().text;
             } else if (check(Token.Type.IDENTIFIER) && peek().text.equalsIgnoreCase("Int")) {
                 returnType = advance().text;

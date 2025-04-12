@@ -26,6 +26,7 @@ public class Lexer {
                     case "return" -> tokens.add(new Token(Token.Type.RETURN, word));
                     case "print" -> tokens.add(new Token(Token.Type.PRINT, word));
                     case "int" -> tokens.add(new Token(Token.Type.INT_TYPE, word));
+                    case "void" -> tokens.add(new Token(Token.Type.VOID_TYPE, word));
                     default -> tokens.add(new Token(Token.Type.IDENTIFIER, word));
                 }
             } else if (Character.isDigit(c)) {
