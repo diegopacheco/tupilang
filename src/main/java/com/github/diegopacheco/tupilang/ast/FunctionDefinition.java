@@ -2,8 +2,6 @@ package com.github.diegopacheco.tupilang.ast;
 
 import java.util.List;
 
-import java.util.List;
-
 public class FunctionDefinition implements Stmt {
     private final String name;
     private final List<Param> params;
@@ -21,7 +19,7 @@ public class FunctionDefinition implements Stmt {
         return name;
     }
 
-    public List<Param> getParams() {
+    public List<Param> getParameters() {
         return params;
     }
 
