@@ -1,3 +1,18 @@
+### Rationale
+
+This is a simple POC on how to create a toy programing language.
+Interesting things here:
+1. Uses Java 23
+2. No libraries, No external dependencies
+3. Heavily inspired by Scala 3
+4. However, much more simple
+5. So far supports:
+  * Types: int, string, void
+  * Keywors: if, return
+  * Create functions with def
+  * Built in functions: print
+6. REPL
+
 ### Build 
 
 ```bash
