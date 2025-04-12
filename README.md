@@ -1,3 +1,7 @@
+# Tupilang
+
+<img src="tupilang-logo.png" />
+
 ### Rationale
 
 This is a simple POC on how to create a toy programing language.
@@ -13,7 +17,8 @@ Interesting things here:
  * Create functions with def
  * Built-in functions: print
 
-Tupilang binary: jar size it's only `31KB`.
+Tupilang binary: jar size it's only `31KB`.<br/>
+Created by Diego Pacheco in APRIL/2025.
 
 ### Build 
 
