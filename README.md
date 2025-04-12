@@ -6,12 +6,12 @@ Interesting things here:
 2. No libraries, No external dependencies
 3. Heavily inspired by Scala 3
 4. However, much more simple
-5. So far supports:
-  * Types: int, string, void
-  * Keywors: if, return
-  * Create functions with def
-  * Built in functions: print
-6. REPL
+5. REPL
+6. So far supports:
+ * Types: int, string, void
+ * Keywords: if, return
+ * Create functions with def
+ * Built-in functions: print
 
 ### Build 
 
