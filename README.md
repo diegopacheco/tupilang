@@ -1,2 +1,12 @@
-# tupilang
-Tupilang: Diego Pacheco's Tupi Programing Language
+### Build 
+
+```bash
+./mvnw clean install 
+```
+
+### Result
+
+```
+```
+
+
