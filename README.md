@@ -93,6 +93,7 @@ def sum(a:Int, b:Int) int {
 print(sum(x,x));
 ```
 
+result
 ```scala
 10
 test
