@@ -58,6 +58,20 @@ test
 :> print(sum(100,200));
 300
 :>
+:> val x = 10;
+:> val y = 20;
+:> val name = "Diego";
+:> def printAll() void {
+... print(x);
+... print(y);
+... print(name);
+... }
+:> printAll();
+10
+20
+Diego
+:>
+
 ```
 
 ### Supported 
