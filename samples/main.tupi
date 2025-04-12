@@ -1,0 +1,12 @@
+val x = 10;
+if (x == 10) {
+  print(x);
+}
+
+val xxx = "test";
+print(xxx);
+
+def sum(a:Int, b:Int) int {
+  return a + b;
+}
+print(sum(x,x));
