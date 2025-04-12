@@ -105,3 +105,14 @@ def sum(a:Int, b:Int) int {
 }
 ```
 
+### Running .tupi files
+
+```bash
+./repl.sh samples/main.tupi
+```
+
+```scala
+10
+test
+20
+```
