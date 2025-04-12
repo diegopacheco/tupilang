@@ -39,24 +39,6 @@ Interesting things here:
            |_|                             |___/
 
     Tupi Lang by Diego Pacheco
-  🌿 Version 1.0-SNAPSHOT - writen in Java 23 🌿
-
-Welcome to Tupi Lang! Type 'exit;' to quit.
-:>
-```
-
-```
-❯ ./repl.sh
- _______             _   _
-|__   __|           (_) | |
-   | | _   _ _ __    _  | |     __ _ _ __   __ _
-   | || | | | '_ \  | | | |    / _` | '_ \ / _` |
-   | || |_| | |_) | | | | |___| (_| | | | | (_| |
-   |_|\__,_| .__/|  |_| |______\__,_|_| |_|\__, |
-           | |                              __/ |
-           |_|                             |___/
-
-    Tupi Lang by Diego Pacheco
   🌿 Version 1.0-SNAPSHOT - written in Java 23 🌿
 
 :> val x = 10;
@@ -89,9 +71,14 @@ Diego
 
 ```
 
-### Supported 
+### Running .tupi files
 
+```bash
+./repl.sh samples/main.tupi
 ```
+
+samples/main.tupi
+```scala
 val x = 10;
 if (x == 10) {
   print(x);
@@ -103,12 +90,7 @@ print(xxx);
 def sum(a:Int, b:Int) int {
   return a + b;
 }
-```
-
-### Running .tupi files
-
-```bash
-./repl.sh samples/main.tupi
+print(sum(x,x));
 ```
 
 ```scala
