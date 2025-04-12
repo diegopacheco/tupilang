@@ -13,6 +13,8 @@ Interesting things here:
  * Create functions with def
  * Built-in functions: print
 
+Tupilang binary: jar size it's only `31KB`.
+
 ### Build 
 
 ```bash
