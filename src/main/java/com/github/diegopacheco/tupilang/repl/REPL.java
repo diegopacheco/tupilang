@@ -18,7 +18,7 @@ public class REPL {
         int openBraces = 0;
 
         while (true) {
-            System.out.print(input.length() == 0 ? ":> " : "... ");
+            System.out.print(input.isEmpty() ? ":> " : "... ");
             String line = scanner.nextLine().trim();
 
             if (line.equals("exit;")) {

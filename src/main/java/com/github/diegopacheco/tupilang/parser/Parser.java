@@ -1,6 +1,5 @@
 package com.github.diegopacheco.tupilang.parser;
 
-
 import com.github.diegopacheco.tupilang.ast.*;
 import com.github.diegopacheco.tupilang.token.Token;
 import java.util.*;
