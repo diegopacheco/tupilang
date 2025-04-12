@@ -1,0 +1,217 @@
+package com.github.diegopacheco.tupilang.parser;
+
+import com.github.diegopacheco.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.token.Token;
+import java.util.*;
+
+public class Parser {
+    private final List<Token> tokens;
+    private int pos = 0;
+
+    public Parser(List<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            try {
+                statements.add(parseStatement());
+            } catch (Exception e) {
+                // Skip to next statement on error
+                synchronize();
+                if (!isAtEnd()) {
+                    System.err.println("Error: " + e.getMessage());
+                } else {
+                    throw e;
+                }
+            }
+        }
+        return statements;
+    }
+
+    private void synchronize() {
+        advance();
+        while (!isAtEnd()) {
+            if (previous().type == Token.Type.SEMICOLON) return;
+            switch (peek().type) {
+                case VAL, PRINT, IF, DEF, RETURN:
+                    return;
+            }
+            advance();
+        }
+    }
+
+    private Stmt parseStatement() {
+        if (match(Token.Type.VAL)) {
+            String name = consume(Token.Type.IDENTIFIER, "Expected identifier").text;
+
+            // Support optional initialization
+            Expr expr = null;
+            if (match(Token.Type.EQUAL)) {
+                expr = parseExpression();
+            }
+
+            consume(Token.Type.SEMICOLON, "Expected ';'");
+            return new ValDeclaration(name, expr);
+        }
+
+        if (match(Token.Type.IF)) {
+            consume(Token.Type.LPAREN, "Expected '('");
+            Expr condition = parseExpression();
+            consume(Token.Type.RPAREN, "Expected ')'");
+            consume(Token.Type.LBRACE, "Expected '{'");
+
+            List<Stmt> body = new ArrayList<>();
+            while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+                body.add(parseStatement());
+            }
+
+            consume(Token.Type.RBRACE, "Expected '}'");
+            return new IfStatement(condition, body);
+        }
+
+        if (match(Token.Type.PRINT)) {
+            consume(Token.Type.LPAREN, "Expected '('");
+            Expr expr = parseExpression();
+            consume(Token.Type.RPAREN, "Expected ')'");
+            consume(Token.Type.SEMICOLON, "Expected ';'");
+            return new PrintStatement(expr);
+        }
+
+        if (match(Token.Type.DEF)) {
+            String name = consume(Token.Type.IDENTIFIER, "Expected function name").text;
+            consume(Token.Type.LPAREN, "Expected '('");
+
+            List<Param> params = new ArrayList<>();
+            if (!check(Token.Type.RPAREN)) {
+                do {
+                    String paramName = consume(Token.Type.IDENTIFIER, "Expected param name").text;
+                    consume(Token.Type.COLON, "Expected ':'");
+
+                    // Parse parameter type
+                    String type;
+                    if (check(Token.Type.INT_TYPE) ||
+                            (check(Token.Type.IDENTIFIER) && peek().text.equalsIgnoreCase("Int"))) {
+                        type = advance().text;
+                    } else {
+                        throw new RuntimeException("Expected type");
+                    }
+
+                    params.add(new Param(paramName, type));
+                } while (match(Token.Type.COMMA));
+            }
+
+            consume(Token.Type.RPAREN, "Expected ')'");
+
+            // Parse return type
+            String returnType;
+            if (check(Token.Type.INT_TYPE)) {
+                returnType = advance().text;
+            } else if (check(Token.Type.IDENTIFIER) && peek().text.equalsIgnoreCase("Int")) {
+                returnType = advance().text;
+            } else {
+                throw new RuntimeException("Expected return type");
+            }
+
+            consume(Token.Type.LBRACE, "Expected '{'");
+
+            List<Stmt> body = new ArrayList<>();
+            while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+                body.add(parseStatement());
+            }
+
+            consume(Token.Type.RBRACE, "Expected '}'");
+            return new FunctionDefinition(name, params, returnType, body);
+        }
+
+        if (match(Token.Type.RETURN)) {
+            Expr expr = parseExpression();
+            consume(Token.Type.SEMICOLON, "Expected ';'");
+            return new ReturnStatement(expr);
+        }
+
+        // Handle expressions as statements (like function calls)
+        Expr expr = parseExpression();
+        consume(Token.Type.SEMICOLON, "Expected ';' after expression");
+        return new ExpressionStatement(expr);
+    }
+
+    private Expr parseExpression() {
+        return parseEquality();
+    }
+
+    private Expr parseEquality() {
+        Expr expr = parseAddition();
+
+        if (match(Token.Type.EQEQ)) {
+            String op = previous().text;
+            Expr right = parseAddition();
+            expr = new BinaryExpr(expr, op, right);
+        }
+
+        return expr;
+    }
+
+    private Expr parseAddition() {
+        Expr expr = parsePrimary();
+
+        while (match(Token.Type.PLUS)) {
+            String op = previous().text;
+            Expr right = parsePrimary();
+            expr = new BinaryExpr(expr, op, right);
+        }
+
+        return expr;
+    }
+
+    private Expr parsePrimary() {
+        if (match(Token.Type.NUMBER)) {
+            String numberText = previous().text;
+            return new LiteralIntExpr(Integer.parseInt(numberText));
+        }
+        if (match(Token.Type.STRING)) {
+            return new LiteralStringExpr(previous().text);
+        }
+        if (match(Token.Type.IDENTIFIER)) {
+            return new VariableExpr(previous().text);
+        }
+        throw new RuntimeException("Unexpected expression: " + peek());
+    }
+
+    private boolean match(Token.Type... types) {
+        for (Token.Type type : types) {
+            if (check(type)) {
+                advance();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean check(Token.Type type) {
+        return !isAtEnd() && peek().type == type;
+    }
+
+    private Token consume(Token.Type type, String message) {
+        if (check(type)) return advance();
+        throw new RuntimeException(message + ", found: " + peek());
+    }
+
+    private boolean isAtEnd() {
+        return peek().type == Token.Type.EOF;
+    }
+
+    private Token peek() {
+        return tokens.get(pos);
+    }
+
+    private Token previous() {
+        return tokens.get(pos - 1);
+    }
+
+    private Token advance() {
+        if (!isAtEnd()) pos++;
+        return previous();
+    }
+}
