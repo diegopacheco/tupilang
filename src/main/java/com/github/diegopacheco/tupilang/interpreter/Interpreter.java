@@ -100,4 +100,51 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     public void visitExpressionStatement(ExpressionStatement stmt) {
         evaluate(stmt.getExpression());
     }
+
+    @Override
+    public Object visitCallExpr(CallExpr expr) {
+        String callee = expr.getCallee();
+        FunctionDefinition function = functions.get(callee);
+
+        if (function == null) {
+            throw new RuntimeException("Undefined function: " + callee);
+        }
+
+        List<Object> arguments = new ArrayList<>();
+        for (Expr argument : expr.getArguments()) {
+            arguments.add(evaluate(argument));
+        }
+
+        // Check argument count
+        if (arguments.size() != function.getParameters().size()) {
+            throw new RuntimeException("Expected " + function.getParameters().size() +
+                    " arguments but got " + arguments.size());
+        }
+
+        // Create a new environment for the function execution
+        Map<String, Object> oldEnvironment = new HashMap<>(environment);
+
+        // Bind arguments to parameters
+        for (int i = 0; i < arguments.size(); i++) {
+            environment.put(function.getParameters().get(i).getName(), arguments.get(i));
+        }
+
+        // Execute function body
+        Object returnValue = null;
+        try {
+            for (Stmt stmt : function.getBody()) {
+                if (stmt instanceof ReturnStatement) {
+                    returnValue = evaluate(((ReturnStatement) stmt).getExpression());
+                    break;
+                }
+                execute(stmt);
+            }
+        } finally {
+            // Restore environment
+            environment.clear();
+            environment.putAll(oldEnvironment);
+        }
+
+        return returnValue;
+    }
 }

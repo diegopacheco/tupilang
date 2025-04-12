@@ -174,9 +174,29 @@ public class Parser {
             return new LiteralStringExpr(previous().text);
         }
         if (match(Token.Type.IDENTIFIER)) {
-            return new VariableExpr(previous().text);
+            String name = previous().text;
+
+            // Check if this is a function call
+            if (check(Token.Type.LPAREN)) {
+                return parseCall(name);
+            }
+            return new VariableExpr(name);
         }
         throw new RuntimeException("Unexpected expression: " + peek());
+    }
+
+    private Expr parseCall(String callee) {
+        consume(Token.Type.LPAREN, "Expected '(' after function name");
+        List<Expr> arguments = new ArrayList<>();
+
+        if (!check(Token.Type.RPAREN)) {
+            do {
+                arguments.add(parseExpression());
+            } while (match(Token.Type.COMMA));
+        }
+
+        consume(Token.Type.RPAREN, "Expected ')' after arguments");
+        return new CallExpr(callee, arguments);
     }
 
     private boolean match(Token.Type... types) {

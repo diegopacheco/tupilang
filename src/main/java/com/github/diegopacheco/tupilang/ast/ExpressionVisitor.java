@@ -5,4 +5,5 @@ public interface ExpressionVisitor<T> {
     T visitVariableExpr(VariableExpr expr);
     T visitLiteralIntExpr(LiteralIntExpr expr);
     T visitLiteralStringExpr(LiteralStringExpr expr);
+    T visitCallExpr(CallExpr expr);
 }
