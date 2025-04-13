@@ -44,6 +44,18 @@ public class REPLTest {
     }
 
     @Test
+    public void testCommentsTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/comments.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("42"), "Output should contain the value 42");
+    }
+
+    @Test
     public void testIfsTupiFile() throws Exception {
         String fileContent = Files.readString(Path.of("samples/ifs.tupi"));
         ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());

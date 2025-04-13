@@ -16,6 +16,10 @@ public class Parser {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
             try {
+                // Skip comments
+                if (match(Token.Type.COMMENT)) {
+                    continue;
+                }
                 statements.add(parseStatement());
             } catch (Exception e) {
                 // Skip to next statement on error

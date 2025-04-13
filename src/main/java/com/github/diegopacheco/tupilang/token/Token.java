@@ -18,7 +18,7 @@ public class Token {
         IDENTIFIER, STRING, NUMBER,
 
         // Keywords
-        IF, ELSE, VAL, DEF, RETURN, PRINT, TRUE, FALSE,
+        IF, ELSE, VAL, DEF, RETURN, PRINT, TRUE, FALSE, COMMENT,
 
         // Types
         INT_TYPE, VOID_TYPE,

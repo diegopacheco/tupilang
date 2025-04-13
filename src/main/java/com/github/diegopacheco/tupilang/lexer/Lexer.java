@@ -49,6 +49,17 @@ public class Lexer {
             case '-': addToken(Token.Type.MINUS); break;
             case ';': addToken(Token.Type.SEMICOLON); break;
             case ':': addToken(Token.Type.COLON); break;
+            case '/':
+                if (match('/')) {
+                    // Comment goes until the end of the line
+                    while (peek() != '\n' && !isAtEnd()) {
+                        advance();
+                    }
+                    // No token is added for comments
+                } else {
+                    addToken(Token.Type.SLASH);
+                }
+                break;
             case '=':
                 addToken(match('=') ? Token.Type.EQEQ : Token.Type.EQUAL);
                 break;

@@ -19,11 +19,32 @@ public class REPL {
 
         while (true) {
             System.out.print(input.isEmpty() ? ":> " : "... ");
-            String line = scanner.nextLine().trim();
+            String line = scanner.nextLine();
 
-            if (line.equals("exit;")) {
+            if (line.trim().equals("exit;")) {
                 break;
             }
+
+            // Skip empty lines
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+
+            // If the line is just a comment, execute it directly to process it
+            if (line.trim().startsWith("//")) {
+                try {
+                    Lexer lexer = new Lexer(line);
+                    List<Token> tokens = lexer.scanTokens();
+                    Parser parser = new Parser(tokens);
+                    interpreter.interpret(parser.parse());
+                } catch (Exception e) {
+                    // Silently ignore errors in comment lines
+                }
+                continue;
+            }
+
+            // Add line to input buffer
+            input.append(line).append("\n");
 
             // Count braces to track multi-line blocks
             for (char c : line.toCharArray()) {
@@ -31,14 +52,11 @@ public class REPL {
                 if (c == '}') openBraces--;
             }
 
-            input.append(line).append("\n");
-
             // Process input when all braces are balanced and we have a complete statement
-            if (openBraces == 0 && (line.endsWith(";") || line.endsWith("}"))) {
+            if (openBraces == 0 && (line.trim().endsWith(";") || line.trim().endsWith("}"))) {
                 try {
                     Lexer lexer = new Lexer(input.toString());
                     List<Token> tokens = lexer.scanTokens();
-
                     Parser parser = new Parser(tokens);
                     interpreter.interpret(parser.parse());
                 } catch (Exception e) {

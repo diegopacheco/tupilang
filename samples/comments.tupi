@@ -1,0 +1,6 @@
+// this is a comment - good var
+val ans = 42;
+
+print(ans); // this is a comment - print
+
+// this is the only form of comment
