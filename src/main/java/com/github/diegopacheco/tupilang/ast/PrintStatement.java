@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
 public class PrintStatement implements Stmt {
     private final Expr expression;
@@ -12,7 +12,7 @@ public class PrintStatement implements Stmt {
     }
 
     @Override
-    public void accept(StatementVisitor visitor) {
-        visitor.visitPrintStatement(this);
+    public <T> T accept(StatementVisitor<T> visitor) {
+        return visitor.visitPrintStatement(this);
     }
 }

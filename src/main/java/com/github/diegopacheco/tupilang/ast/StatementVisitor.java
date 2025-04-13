@@ -1,10 +1,10 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
-public interface StatementVisitor {
-    void visitValDeclaration(ValDeclaration stmt);
-    void visitPrintStatement(PrintStatement stmt);
-    void visitIfStatement(IfStatement stmt);
-    void visitFunctionDefinition(FunctionDefinition stmt);
-    void visitReturnStatement(ReturnStatement stmt);
-    void visitExpressionStatement(ExpressionStatement stmt);
+public interface StatementVisitor<T> {
+    T visitValDeclaration(ValDeclaration stmt);
+    T visitPrintStatement(PrintStatement stmt);
+    T visitExpressionStatement(ExpressionStatement stmt);
+    T visitFunctionDefinition(FunctionDefinition stmt);
+    T visitReturnStatement(ReturnStatement stmt);
+    T visitIfStatement(IfStatement stmt);
 }

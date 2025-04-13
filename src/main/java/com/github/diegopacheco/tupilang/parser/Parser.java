@@ -1,7 +1,7 @@
-package com.github.diegopacheco.tupilang.parser;
+package com.github.diegopacheco.tupilang.tupilang.parser;
 
-import com.github.diegopacheco.tupilang.ast.*;
-import com.github.diegopacheco.tupilang.token.Token;
+import com.github.diegopacheco.tupilang.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.tupilang.token.Token;
 import java.util.*;
 
 public class Parser {
@@ -60,15 +60,37 @@ public class Parser {
             consume(Token.Type.LPAREN, "Expected '('");
             Expr condition = parseExpression();
             consume(Token.Type.RPAREN, "Expected ')'");
-            consume(Token.Type.LBRACE, "Expected '{'");
 
-            List<Stmt> body = new ArrayList<>();
-            while (!check(Token.Type.RBRACE) && !isAtEnd()) {
-                body.add(parseStatement());
+            // Parse then branch
+            List<Stmt> thenBody = new ArrayList<>();
+            if (match(Token.Type.LBRACE)) {
+                // Block of statements
+                while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+                    thenBody.add(parseStatement());
+                }
+                consume(Token.Type.RBRACE, "Expected '}'");
+            } else {
+                // Single statement
+                thenBody.add(parseStatement());
             }
 
-            consume(Token.Type.RBRACE, "Expected '}'");
-            return new IfStatement(condition, body);
+            // Parse optional else branch
+            List<Stmt> elseBody = null;
+            if (match(Token.Type.ELSE)) {
+                elseBody = new ArrayList<>();
+                if (match(Token.Type.LBRACE)) {
+                    // Block of statements
+                    while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+                        elseBody.add(parseStatement());
+                    }
+                    consume(Token.Type.RBRACE, "Expected '}'");
+                } else {
+                    // Single statement
+                    elseBody.add(parseStatement());
+                }
+            }
+
+            return new IfStatement(condition, thenBody, elseBody);
         }
 
         if (match(Token.Type.PRINT)) {
@@ -217,7 +239,7 @@ public class Parser {
 
     private Token consume(Token.Type type, String message) {
         if (check(type)) return advance();
-        throw new RuntimeException(message + ", found: " + peek());
+        throw new RuntimeException(message + ", found: " + peek().type + " " + peek().text);
     }
 
     private boolean isAtEnd() {

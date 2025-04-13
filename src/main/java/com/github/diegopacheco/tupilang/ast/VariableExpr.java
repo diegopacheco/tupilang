@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
 public class VariableExpr implements Expr {
     private final String name;

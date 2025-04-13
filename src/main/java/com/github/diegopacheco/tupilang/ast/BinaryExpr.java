@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
 public class BinaryExpr implements Expr {
     private final Expr left;

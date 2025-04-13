@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
 public class ValDeclaration implements Stmt {
     private final String name;
@@ -18,7 +18,7 @@ public class ValDeclaration implements Stmt {
     }
 
     @Override
-    public void accept(StatementVisitor visitor) {
-        visitor.visitValDeclaration(this);
+    public <T> T accept(StatementVisitor<T> visitor) {
+        return visitor.visitValDeclaration(this);
     }
 }

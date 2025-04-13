@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class FunctionDefinition implements Stmt {
     }
 
     @Override
-    public void accept(StatementVisitor visitor) {
-        visitor.visitFunctionDefinition(this);
+    public <T> T accept(StatementVisitor<T> visitor) {
+        return visitor.visitFunctionDefinition(this);
     }
 }

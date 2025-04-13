@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
 public class ReturnStatement implements Stmt {
     private final Expr expression;
@@ -12,7 +12,7 @@ public class ReturnStatement implements Stmt {
     }
 
     @Override
-    public void accept(StatementVisitor visitor) {
-        visitor.visitReturnStatement(this);
+    public <T> T accept(StatementVisitor<T> visitor) {
+        return visitor.visitReturnStatement(this);
     }
 }

@@ -1,9 +1,11 @@
-package com.github.diegopacheco.tupilang.interpreter;
+package com.github.diegopacheco.tupilang.tupilang.interpreter;
 
-import com.github.diegopacheco.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.tupilang.ast.*;
+
 import java.util.*;
 
-public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor {
+public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<Void> {
     private final Map<String, Object> environment = new HashMap<>();
     private final Map<String, FunctionDefinition> functions = new HashMap<>();
 
@@ -18,39 +20,55 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     }
 
     @Override
-    public void visitValDeclaration(ValDeclaration stmt) {
+    public Void visitValDeclaration(ValDeclaration stmt) {
         Object value = null;
         if (stmt.getInitializer() != null) {
             value = evaluate(stmt.getInitializer());
         }
         environment.put(stmt.getName(), value);
+        return null;
     }
 
     @Override
-    public void visitIfStatement(IfStatement stmt) {
+    public Void visitIfStatement(IfStatement stmt) {
         Object condition = evaluate(stmt.getCondition());
-        if (condition instanceof Integer && (Integer) condition == 1 ||
-                condition instanceof Boolean && (Boolean) condition) {
-            for (Stmt bodyStmt : stmt.getBody()) {
-                execute(bodyStmt);
+
+        if (isTruthy(condition)) {
+            for (Stmt statement : stmt.getThenBranch()) {
+                execute(statement);
+            }
+        } else if (stmt.hasElseBranch()) {
+            for (Stmt statement : stmt.getElseBranch()) {
+                execute(statement);
             }
         }
+        return null;
+    }
+
+    private boolean isTruthy(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof Boolean) return (Boolean) obj;
+        if (obj instanceof Integer) return (Integer) obj != 0;
+        return true;
     }
 
     @Override
-    public void visitPrintStatement(PrintStatement stmt) {
+    public Void visitPrintStatement(PrintStatement stmt) {
         Object value = evaluate(stmt.getExpression());
         System.out.println(value);
+        return null;
     }
 
     @Override
-    public void visitReturnStatement(ReturnStatement stmt) {
+    public Void visitReturnStatement(ReturnStatement stmt) {
         Object returnValue = evaluate(stmt.getExpression());
+        return null;
     }
 
     @Override
-    public void visitFunctionDefinition(FunctionDefinition stmt) {
+    public Void visitFunctionDefinition(FunctionDefinition stmt) {
         functions.put(stmt.getName(), stmt);
+        return null;
     }
 
     @Override
@@ -97,8 +115,9 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor 
     }
 
     @Override
-    public void visitExpressionStatement(ExpressionStatement stmt) {
+    public Void visitExpressionStatement(ExpressionStatement stmt) {
         evaluate(stmt.getExpression());
+        return null;
     }
 
     @Override

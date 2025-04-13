@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.token;
+package com.github.diegopacheco.tupilang.tupilang.token;
 
 public class Token {
     public enum Type {

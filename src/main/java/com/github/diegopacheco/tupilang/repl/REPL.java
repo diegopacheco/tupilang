@@ -1,9 +1,9 @@
-package com.github.diegopacheco.tupilang.repl;
+package com.github.diegopacheco.tupilang.tupilang.repl;
 
-import com.github.diegopacheco.tupilang.interpreter.Interpreter;
-import com.github.diegopacheco.tupilang.parser.Parser;
-import com.github.diegopacheco.tupilang.lexer.Lexer;
-import com.github.diegopacheco.tupilang.token.Token;
+import com.github.diegopacheco.tupilang.tupilang.interpreter.Interpreter;
+import com.github.diegopacheco.tupilang.tupilang.parser.Parser;
+import com.github.diegopacheco.tupilang.tupilang.lexer.Lexer;
+import com.github.diegopacheco.tupilang.tupilang.token.Token;
 
 import java.util.List;
 import java.util.Scanner;
@@ -37,7 +37,7 @@ public class REPL {
             if (openBraces == 0 && (line.endsWith(";") || line.endsWith("}"))) {
                 try {
                     Lexer lexer = new Lexer(input.toString());
-                    List<Token> tokens = lexer.tokenize();
+                    List<Token> tokens = lexer.scanTokens();
 
                     Parser parser = new Parser(tokens);
                     interpreter.interpret(parser.parse());

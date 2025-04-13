@@ -1,5 +1,5 @@
-package com.github.diegopacheco.tupilang.ast;
+package com.github.diegopacheco.tupilang.tupilang.ast;
 
 public interface Stmt {
-    void accept(StatementVisitor visitor);
+    <T> T accept(StatementVisitor<T> visitor);
 }

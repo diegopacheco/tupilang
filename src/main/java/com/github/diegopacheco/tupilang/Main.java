@@ -1,10 +1,12 @@
-import com.github.diegopacheco.tupilang.repl.REPL;
+package com.github.diegopacheco.tupilang.tupilang;
 
-import com.github.diegopacheco.tupilang.interpreter.Interpreter;
-import com.github.diegopacheco.tupilang.lexer.Lexer;
-import com.github.diegopacheco.tupilang.parser.Parser;
-import com.github.diegopacheco.tupilang.token.Token;
-import com.github.diegopacheco.tupilang.ast.Stmt;
+import com.github.diegopacheco.tupilang.tupilang.repl.REPL;
+
+import com.github.diegopacheco.tupilang.tupilang.interpreter.Interpreter;
+import com.github.diegopacheco.tupilang.tupilang.lexer.Lexer;
+import com.github.diegopacheco.tupilang.tupilang.parser.Parser;
+import com.github.diegopacheco.tupilang.tupilang.token.Token;
+import com.github.diegopacheco.tupilang.tupilang.ast.Stmt;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,7 +25,7 @@ public class Main {
         try {
             String source = Files.readString(Paths.get(path));
             Lexer lexer = new Lexer(source);
-            List<Token> tokens = lexer.tokenize();
+            List<Token> tokens = lexer.scanTokens();
             Parser parser = new Parser(tokens);
 
             List<Stmt> statements = parser.parse();
