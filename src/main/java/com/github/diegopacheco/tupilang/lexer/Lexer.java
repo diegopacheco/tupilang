@@ -41,8 +41,8 @@ public class Lexer {
         switch (c) {
             case '(': addToken(Token.Type.LPAREN); break;
             case ')': addToken(Token.Type.RPAREN); break;
-            case '{': addToken(Token.Type.LBRACE); break;  // Handle braces
-            case '}': addToken(Token.Type.RBRACE); break;  // Handle braces
+            case '{': addToken(Token.Type.LBRACE); break;
+            case '}': addToken(Token.Type.RBRACE); break;
             case ',': addToken(Token.Type.COMMA); break;
             case '.': addToken(Token.Type.DOT); break;
             case '+': addToken(Token.Type.PLUS); break;
