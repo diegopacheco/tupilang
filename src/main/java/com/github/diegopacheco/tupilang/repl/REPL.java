@@ -25,27 +25,26 @@ public class REPL {
                 break;
             }
 
-            // Skip empty lines
+            // Handle empty lines
             if (line.trim().isEmpty()) {
                 continue;
             }
 
-            // Skip comment lines but add them to input
+            // Add the line to input buffer regardless of whether it's a comment
+            input.append(line).append("\n");
+
+            // If it's a comment line, just continue without further processing
             if (line.trim().startsWith("//")) {
-                input.append(line).append("\n");
                 continue;
             }
 
-            // Add line to input buffer
-            input.append(line).append("\n");
-
-            // Count braces to track multi-line blocks
+            // Count braces for multi-line statements
             for (char c : line.toCharArray()) {
                 if (c == '{') openBraces++;
                 if (c == '}') openBraces--;
             }
 
-            // Process input when all braces are balanced and we have a complete statement
+            // Execute when statement is complete
             if (openBraces == 0 && (line.trim().endsWith(";") || line.trim().endsWith("}"))) {
                 try {
                     Lexer lexer = new Lexer(input.toString());

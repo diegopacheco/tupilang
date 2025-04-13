@@ -46,6 +46,7 @@ public class Lexer {
             case ',': addToken(Token.Type.COMMA); break;
             case '.': addToken(Token.Type.DOT); break;
             case '+': addToken(Token.Type.PLUS); break;
+            case '*': addToken(Token.Type.STAR); break;
             case '-': addToken(Token.Type.MINUS); break;
             case ';': addToken(Token.Type.SEMICOLON); break;
             case ':': addToken(Token.Type.COLON); break;

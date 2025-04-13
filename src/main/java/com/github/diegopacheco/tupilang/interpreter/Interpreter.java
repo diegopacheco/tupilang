@@ -1,6 +1,7 @@
 package com.github.diegopacheco.tupilang.interpreter;
 
 import com.github.diegopacheco.tupilang.ast.*;
+
 import java.util.*;
 
 public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<Void> {
@@ -80,6 +81,18 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
             }
             if (left instanceof String || right instanceof String) {
                 return left.toString() + right.toString();
+            }
+        } else if (expr.getOperator().equals("-")) {
+            if (left instanceof Integer && right instanceof Integer) {
+                return (Integer) left - (Integer) right;
+            }
+        } else if (expr.getOperator().equals("*")) {
+            if (left instanceof Integer && right instanceof Integer) {
+                return (Integer) left * (Integer) right;
+            }
+        } else if (expr.getOperator().equals("/")) {
+            if (left instanceof Integer && right instanceof Integer) {
+                return (Integer) left / (Integer) right;
             }
         }
 

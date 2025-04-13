@@ -182,9 +182,21 @@ public class Parser {
     }
 
     private Expr parseAddition() {
+        Expr expr = parseMultiplication();
+
+        while (match(Token.Type.PLUS, Token.Type.MINUS)) {
+            String op = previous().text;
+            Expr right = parseMultiplication();
+            expr = new BinaryExpr(expr, op, right);
+        }
+
+        return expr;
+    }
+
+    private Expr parseMultiplication() {
         Expr expr = parsePrimary();
 
-        while (match(Token.Type.PLUS)) {
+        while (match(Token.Type.STAR, Token.Type.SLASH)) {
             String op = previous().text;
             Expr right = parsePrimary();
             expr = new BinaryExpr(expr, op, right);
