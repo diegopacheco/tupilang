@@ -12,7 +12,7 @@ Interesting things here:
 4. However, much more simple
 5. REPL
 6. So far supports:
- * Types: int, string, void
+ * Types: int, string, void, bool
  * Keywords: if, return
  * Create functions with def, comments with //
  * Built-in functions: print
