@@ -21,6 +21,7 @@ public class Lexer {
         keywords.put("return", Token.Type.RETURN);
         keywords.put("Int", Token.Type.INT_TYPE);
         keywords.put("void", Token.Type.VOID_TYPE);
+
     }
 
     public Lexer(String source) {
@@ -88,13 +89,26 @@ public class Lexer {
         }
     }
 
+
     private void identifier() {
         while (isAlphaNumeric(peek())) advance();
 
         String text = source.substring(start, current);
-        Token.Type type = keywords.get(text);
-        if (type == null) type = Token.Type.IDENTIFIER;
-
+        Token.Type type = switch (text) {
+            case "val" -> Token.Type.VAL;
+            case "if" -> Token.Type.IF;
+            case "else" -> Token.Type.ELSE;
+            case "print" -> Token.Type.PRINT;
+            case "Int" -> Token.Type.INT_TYPE;
+            case "void" -> Token.Type.VOID_TYPE;
+            case "def" -> Token.Type.DEF;
+            case "return" -> Token.Type.RETURN;
+            // Add Boolean keywords
+            case "bool" -> Token.Type.BOOL_TYPE;
+            case "true" -> Token.Type.TRUE;
+            case "false" -> Token.Type.FALSE;
+            default -> Token.Type.IDENTIFIER;
+        };
         addToken(type);
     }
 

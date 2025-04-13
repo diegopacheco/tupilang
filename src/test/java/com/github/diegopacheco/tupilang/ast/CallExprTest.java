@@ -83,6 +83,11 @@ public class CallExprTest {
             }
 
             @Override
+            public String acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
+                return "";
+            }
+
+            @Override
             public String visitLiteralIntExpr(LiteralIntExpr expr) {
                 return "";
             }

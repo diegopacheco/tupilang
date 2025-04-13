@@ -213,6 +213,12 @@ public class Parser {
         if (match(Token.Type.STRING)) {
             return new LiteralStringExpr(previous().text);
         }
+        if (match(Token.Type.TRUE)) {
+            return new LiteralBoolExpr(true);
+        }
+        if (match(Token.Type.FALSE)) {
+            return new LiteralBoolExpr(false);
+        }
         if (match(Token.Type.IDENTIFIER)) {
             String name = previous().text;
 

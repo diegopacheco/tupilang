@@ -40,6 +40,11 @@ public class LiteralStringExprTest {
             }
 
             @Override
+            public String acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
+                return "";
+            }
+
+            @Override
             public String visitLiteralIntExpr(LiteralIntExpr expr) {
                 return "";
             }

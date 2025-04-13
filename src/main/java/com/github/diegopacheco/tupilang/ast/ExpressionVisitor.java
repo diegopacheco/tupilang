@@ -6,4 +6,5 @@ public interface ExpressionVisitor<T> {
     T visitLiteralIntExpr(LiteralIntExpr expr);
     T visitLiteralStringExpr(LiteralStringExpr expr);
     T visitCallExpr(CallExpr expr);
+    T acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr);
 }

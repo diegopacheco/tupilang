@@ -53,6 +53,11 @@ public class LiteralIntExprTest {
             }
 
             @Override
+            public String acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
+                return "";
+            }
+
+            @Override
             public String visitLiteralIntExpr(LiteralIntExpr expr) {
                 return "Int: " + expr.getValue();
             }

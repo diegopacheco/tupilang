@@ -54,8 +54,27 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
     @Override
     public Void visitPrintStatement(PrintStatement stmt) {
         Object value = evaluate(stmt.getExpression());
-        System.out.println(value);
+        System.out.println(stringify(value));
         return null;
+    }
+
+    private String stringify(Object obj) {
+        if (obj == null) return "null";
+
+        if (obj instanceof Boolean) {
+            return obj.toString();
+        }
+
+        if (obj instanceof Integer) {
+            return obj.toString();
+        }
+
+        // For string literals, we already have the raw content
+        if (obj instanceof String) {
+            return (String) obj;
+        }
+
+        return obj.toString();
     }
 
     @Override
@@ -97,7 +116,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
         }
 
         if (expr.getOperator().equals("==")) {
-            return Objects.equals(left, right) ? 1 : 0;
+            return Objects.equals(left, right);
         }
 
         throw new RuntimeException("Unsupported operation: " + expr.getOperator());
@@ -176,5 +195,10 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
         }
 
         return returnValue;
+    }
+
+    @Override
+    public Object acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
+        return literalBoolExpr.value;
     }
 }

@@ -21,7 +21,7 @@ public class Token {
         IF, ELSE, VAL, DEF, RETURN, PRINT, TRUE, FALSE, COMMENT,
 
         // Types
-        INT_TYPE, VOID_TYPE,
+        INT_TYPE, VOID_TYPE, BOOL_TYPE,
 
         ERROR, EOF
     }
