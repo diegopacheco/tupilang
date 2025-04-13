@@ -1,0 +1,6 @@
+val x = 11;
+if (x == 10) {
+  print(x);
+} else {
+  print("it's not 10");
+}
