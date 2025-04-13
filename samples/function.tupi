@@ -1,0 +1,6 @@
+def sum(a:Int, b:Int) int {
+  print("Running function sum ");
+  val result =  a + b;
+  return result;
+}
+print(sum(52,8));
