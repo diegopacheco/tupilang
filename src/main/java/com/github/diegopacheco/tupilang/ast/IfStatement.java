@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.tupilang.ast;
+package com.github.diegopacheco.tupilang.ast;
 
 import java.util.List;
 

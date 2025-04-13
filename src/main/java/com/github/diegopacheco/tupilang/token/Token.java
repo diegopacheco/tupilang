@@ -1,10 +1,11 @@
-package com.github.diegopacheco.tupilang.tupilang.token;
+package com.github.diegopacheco.tupilang.token;
 
 public class Token {
+
     public enum Type {
         // Single-character tokens
-        LEFT_PAREN, RIGHT_PAREN, LPAREN, RPAREN,
-        LEFT_BRACE, RIGHT_BRACE, LBRACE, RBRACE,
+        LEFT_PAREN, RIGHT_PAREN, LPAREN, RPAREN, LBRACKET,
+        LEFT_BRACE, RIGHT_BRACE, LBRACE, RBRACE, RBRACKET,
         COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, COLON,
 
         // One or two character tokens
@@ -22,12 +23,13 @@ public class Token {
         // Types
         INT_TYPE, VOID_TYPE,
 
-        EOF
+        ERROR, EOF
     }
 
     public final Type type;
     public final String text;
     public final Object literal;
+    public int line = 1;
 
     public Token(Type type, String text) {
         this(type, text, null);
@@ -37,6 +39,29 @@ public class Token {
         this.type = type;
         this.text = text;
         this.literal = literal;
+    }
+
+    public Token(Type type, String anInt, Object o, int i) {
+        this.type = type;
+        this.text = anInt;
+        this.literal = o;
+        this.line = i;
+    }
+
+    public Type type() {
+        return type;
+    }
+
+    public String lexeme() {
+        return text;
+    }
+
+    public Object literal() {
+        return literal;
+    }
+
+    public int line() {
+        return line;
     }
 
     @Override

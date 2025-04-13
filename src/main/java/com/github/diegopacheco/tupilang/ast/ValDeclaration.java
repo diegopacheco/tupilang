@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.tupilang.ast;
+package com.github.diegopacheco.tupilang.ast;
 
 public class ValDeclaration implements Stmt {
     private final String name;
@@ -12,7 +12,6 @@ public class ValDeclaration implements Stmt {
     public String getName() {
         return name;
     }
-
     public Expr getInitializer() {
         return initializer;
     }

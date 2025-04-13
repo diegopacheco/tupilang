@@ -1,5 +1,5 @@
-package com.github.diegopacheco.tupilang.tupilang.lexer;
-import com.github.diegopacheco.tupilang.tupilang.token.Token;
+package com.github.diegopacheco.tupilang.lexer;
+import com.github.diegopacheco.tupilang.token.Token;
 import java.util.*;
 
 public class Lexer {

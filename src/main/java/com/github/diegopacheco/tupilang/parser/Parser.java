@@ -1,7 +1,7 @@
-package com.github.diegopacheco.tupilang.tupilang.parser;
+package com.github.diegopacheco.tupilang.parser;
 
-import com.github.diegopacheco.tupilang.tupilang.ast.*;
-import com.github.diegopacheco.tupilang.tupilang.token.Token;
+import com.github.diegopacheco.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.token.Token;
 import java.util.*;
 
 public class Parser {

@@ -1,8 +1,6 @@
-package com.github.diegopacheco.tupilang.tupilang.interpreter;
+package com.github.diegopacheco.tupilang.interpreter;
 
-import com.github.diegopacheco.tupilang.tupilang.ast.*;
-import com.github.diegopacheco.tupilang.tupilang.ast.*;
-
+import com.github.diegopacheco.tupilang.ast.*;
 import java.util.*;
 
 public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<Void> {

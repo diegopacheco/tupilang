@@ -1,4 +1,4 @@
-package com.github.diegopacheco.tupilang.tupilang.ast;
+package com.github.diegopacheco.tupilang.ast;
 
 public class LiteralIntExpr implements Expr {
     private final int value;

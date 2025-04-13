@@ -1,12 +1,11 @@
-package com.github.diegopacheco.tupilang.tupilang;
+package com.github.diegopacheco.tupilang;
 
-import com.github.diegopacheco.tupilang.tupilang.repl.REPL;
-
-import com.github.diegopacheco.tupilang.tupilang.interpreter.Interpreter;
-import com.github.diegopacheco.tupilang.tupilang.lexer.Lexer;
-import com.github.diegopacheco.tupilang.tupilang.parser.Parser;
-import com.github.diegopacheco.tupilang.tupilang.token.Token;
-import com.github.diegopacheco.tupilang.tupilang.ast.Stmt;
+import com.github.diegopacheco.tupilang.repl.REPL;
+import com.github.diegopacheco.tupilang.interpreter.Interpreter;
+import com.github.diegopacheco.tupilang.lexer.Lexer;
+import com.github.diegopacheco.tupilang.parser.Parser;
+import com.github.diegopacheco.tupilang.token.Token;
+import com.github.diegopacheco.tupilang.ast.Stmt;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
