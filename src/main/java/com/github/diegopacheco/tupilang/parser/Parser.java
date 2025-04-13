@@ -136,6 +136,8 @@ public class Parser {
                 returnType = advance().text;
             } else if (check(Token.Type.INT_TYPE)) {
                 returnType = advance().text;
+            } else if (check(Token.Type.BOOL_TYPE)) {
+                returnType = advance().text;
             } else if (check(Token.Type.IDENTIFIER) && peek().text.equalsIgnoreCase("Int")) {
                 returnType = advance().text;
             } else {
