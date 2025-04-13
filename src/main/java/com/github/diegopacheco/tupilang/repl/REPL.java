@@ -30,16 +30,9 @@ public class REPL {
                 continue;
             }
 
-            // If the line is just a comment, execute it directly to process it
+            // Skip comment lines but add them to input
             if (line.trim().startsWith("//")) {
-                try {
-                    Lexer lexer = new Lexer(line);
-                    List<Token> tokens = lexer.scanTokens();
-                    Parser parser = new Parser(tokens);
-                    interpreter.interpret(parser.parse());
-                } catch (Exception e) {
-                    // Silently ignore errors in comment lines
-                }
+                input.append(line).append("\n");
                 continue;
             }
 
