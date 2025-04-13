@@ -1,0 +1,13 @@
+def isCool() bool {
+    return true;
+}
+
+def printIf(condition: bool) void {
+    if (condition) {
+        print("works");
+    } else {
+        print("Condition is false no print");
+    }
+}
+
+printIf(isCool());

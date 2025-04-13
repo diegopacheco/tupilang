@@ -50,7 +50,6 @@ public class Parser {
         if (match(Token.Type.VAL)) {
             String name = consume(Token.Type.IDENTIFIER, "Expected identifier").text;
 
-            // Support optional initialization
             Expr expr = null;
             if (match(Token.Type.EQUAL)) {
                 expr = parseExpression();
@@ -115,11 +114,14 @@ public class Parser {
                     String paramName = consume(Token.Type.IDENTIFIER, "Expected param name").text;
                     consume(Token.Type.COLON, "Expected ':'");
 
-                    // Parse parameter type
+                    // Parse parameter type - support multiple types
                     String type;
-                    if (check(Token.Type.INT_TYPE) ||
-                            (check(Token.Type.IDENTIFIER) && peek().text.equalsIgnoreCase("Int"))) {
-                        type = advance().text;
+                    if (match(Token.Type.INT_TYPE)) {
+                        type = "Int";
+                    } else if (match(Token.Type.BOOL_TYPE)) {
+                        type = "bool";
+                    } else if (match(Token.Type.IDENTIFIER)) {
+                        type = previous().text;
                     } else {
                         throw new RuntimeException("Expected type");
                     }
@@ -130,16 +132,16 @@ public class Parser {
 
             consume(Token.Type.RPAREN, "Expected ')'");
 
-            // Parse return type - support void type
+            // Parse return type - support multiple types
             String returnType;
-            if (check(Token.Type.VOID_TYPE)) {
-                returnType = advance().text;
-            } else if (check(Token.Type.INT_TYPE)) {
-                returnType = advance().text;
-            } else if (check(Token.Type.BOOL_TYPE)) {
-                returnType = advance().text;
-            } else if (check(Token.Type.IDENTIFIER) && peek().text.equalsIgnoreCase("Int")) {
-                returnType = advance().text;
+            if (match(Token.Type.VOID_TYPE)) {
+                returnType = "void";
+            } else if (match(Token.Type.INT_TYPE)) {
+                returnType = "Int";
+            } else if (match(Token.Type.BOOL_TYPE)) {
+                returnType = "bool";
+            } else if (match(Token.Type.IDENTIFIER)) {
+                returnType = previous().text;
             } else {
                 throw new RuntimeException("Expected return type");
             }
@@ -230,7 +232,15 @@ public class Parser {
             }
             return new VariableExpr(name);
         }
-        throw new RuntimeException("Unexpected expression: " + peek());
+
+        // Handle parenthesized expressions
+        if (match(Token.Type.LPAREN)) {
+            Expr expr = parseExpression();
+            consume(Token.Type.RPAREN, "Expected ')'");
+            return expr;
+        }
+
+        throw new RuntimeException("Unexpected expression: " + peek().type + " " + peek().text);
     }
 
     private Expr parseCall(String callee) {

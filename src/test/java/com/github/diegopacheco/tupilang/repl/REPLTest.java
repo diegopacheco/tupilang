@@ -56,6 +56,18 @@ public class REPLTest {
     }
 
     @Test
+    public void testBoolTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/bool.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("works"), "Output should contain the value works");
+    }
+
+    @Test
     public void testIfsTupiFile() throws Exception {
         String fileContent = Files.readString(Path.of("samples/ifs.tupi"));
         ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
