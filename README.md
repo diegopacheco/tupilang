@@ -14,7 +14,7 @@ Interesting things here:
 6. So far supports:
  * Types: int, string, void
  * Keywords: if, return
- * Create functions with def
+ * Create functions with def, comments with //
  * Built-in functions: print
 
 Tupilang binary: jar size it's only *`33KB`* .<br/>
