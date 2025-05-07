@@ -10,9 +10,4 @@ public class ExpressionStatement implements Stmt {
     public Expr getExpression() {
         return expression;
     }
-
-    @Override
-    public <T> T accept(StatementVisitor<T> visitor) {
-        return visitor.visitExpressionStatement(this);
-    }
 }
