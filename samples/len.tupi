@@ -1,0 +1,2 @@
+val x = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+print(len(x)); // prints 26
