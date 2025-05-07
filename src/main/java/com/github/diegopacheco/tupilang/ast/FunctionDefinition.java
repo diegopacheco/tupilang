@@ -31,8 +31,4 @@ public class FunctionDefinition implements Stmt {
         return body;
     }
 
-    @Override
-    public <T> T accept(StatementVisitor<T> visitor) {
-        return visitor.visitFunctionDefinition(this);
-    }
 }
