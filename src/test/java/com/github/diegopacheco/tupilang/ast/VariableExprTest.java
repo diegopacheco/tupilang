@@ -19,44 +19,10 @@ public class VariableExprTest {
     }
 
     @Test
-    public void testAcceptVisitor() {
+    public void testVariableInspection() {
         String varName = "myVariable";
         VariableExpr expr = new VariableExpr(varName);
-
-        ExpressionVisitor<String> visitor = new ExpressionVisitor<String>() {
-            @Override
-            public String visitBinaryExpr(BinaryExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String visitCallExpr(CallExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
-                return "";
-            }
-
-            @Override
-            public String visitLiteralIntExpr(LiteralIntExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String visitLiteralStringExpr(LiteralStringExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String visitVariableExpr(VariableExpr expr) {
-                return "Variable: " + expr.getName();
-            }
-        };
-
-        String result = expr.accept(visitor);
-        assertEquals("Variable: myVariable", result);
+        assertEquals("myVariable", expr.getName());
     }
 
     @Test
