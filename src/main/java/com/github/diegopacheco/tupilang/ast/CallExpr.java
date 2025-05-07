@@ -19,8 +19,4 @@ public class CallExpr implements Expr {
         return arguments;
     }
 
-    @Override
-    public <T> T accept(ExpressionVisitor<T> visitor) {
-        return visitor.visitCallExpr(this);
-    }
 }
