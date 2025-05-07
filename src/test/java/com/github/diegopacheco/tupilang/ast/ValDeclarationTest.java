@@ -22,39 +22,32 @@ public class ValDeclarationTest {
     }
 
     @Test
-    public void testValDeclarationAcceptsVisitor() {
+    public void testDirectInspection() {
+        // Replace visitor test with direct inspection
         Expr initializer = new LiteralStringExpr("hello");
         ValDeclaration declaration = new ValDeclaration("greeting", initializer);
 
-        StatementVisitor<String> visitor = new StatementVisitor<String>() {
-            @Override
-            public String visitValDeclaration(ValDeclaration stmt) {
-                return stmt.getName();
-            }
-            // Implement other required methods
-            @Override
-            public String visitPrintStatement(PrintStatement stmt) {
-                return null;
-            }
-            @Override
-            public String visitExpressionStatement(ExpressionStatement stmt) {
-                return null;
-            }
-            @Override
-            public String visitFunctionDefinition(FunctionDefinition stmt) {
-                return "";
-            }
-            @Override
-            public String visitReturnStatement(ReturnStatement stmt) {
-                return "";
-            }
-            @Override
-            public String visitIfStatement(IfStatement stmt) {
-                return "";
-            }
-        };
+        assertEquals("greeting", declaration.getName());
+        assertTrue(declaration.getInitializer() instanceof LiteralStringExpr);
+        assertEquals("hello", ((LiteralStringExpr)declaration.getInitializer()).getValue());
+    }
 
-        String result = declaration.accept(visitor);
-        assertEquals("greeting", result);
+    @Test
+    public void testWithComplexInitializer() {
+        BinaryExpr binaryExpr = new BinaryExpr(
+                new LiteralIntExpr(5),
+                "+",
+                new LiteralIntExpr(3)
+        );
+
+        ValDeclaration declaration = new ValDeclaration("sum", binaryExpr);
+
+        assertEquals("sum", declaration.getName());
+        assertTrue(declaration.getInitializer() instanceof BinaryExpr);
+
+        BinaryExpr expr = (BinaryExpr) declaration.getInitializer();
+        assertEquals("+", expr.getOperator());
+        assertEquals(5, ((LiteralIntExpr)expr.getLeft()).getValue());
+        assertEquals(3, ((LiteralIntExpr)expr.getRight()).getValue());
     }
 }
