@@ -4,6 +4,8 @@ import com.github.diegopacheco.tupilang.interpreter.Interpreter;
 import com.github.diegopacheco.tupilang.parser.Parser;
 import com.github.diegopacheco.tupilang.lexer.Lexer;
 import com.github.diegopacheco.tupilang.token.Token;
+import com.github.diegopacheco.tupilang.ast.Stmt;
+import com.github.diegopacheco.tupilang.ast.ExpressionStatement;
 
 import java.util.List;
 import java.util.Scanner;
@@ -50,7 +52,12 @@ public class REPL {
                     Lexer lexer = new Lexer(input.toString());
                     List<Token> tokens = lexer.scanTokens();
                     Parser parser = new Parser(tokens);
-                    interpreter.interpret(parser.parse());
+                    List<Stmt> statements = parser.parse();
+
+                    Object result = executeStatements(interpreter, statements);
+                    if (result != null) {
+                        System.out.println(result);
+                    }
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -59,6 +66,14 @@ public class REPL {
         }
 
         System.out.println("Goodbye!");
+    }
+
+    private static Object executeStatements(Interpreter interpreter, List<Stmt> statements) {
+        Object result = null;
+        for (Stmt stmt : statements) {
+            result = interpreter.execute(stmt);
+        }
+        return result;
     }
 
     private static void printLogo() {
