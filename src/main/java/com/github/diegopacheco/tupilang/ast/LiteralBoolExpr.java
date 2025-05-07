@@ -1,10 +1,14 @@
 package com.github.diegopacheco.tupilang.ast;
 
 public class LiteralBoolExpr implements Expr {
-    public final boolean value;
+    private final boolean value;
 
     public LiteralBoolExpr(boolean value) {
         this.value = value;
+    }
+
+    public boolean getValue() {
+        return value;
     }
 
     @Override
@@ -12,8 +16,4 @@ public class LiteralBoolExpr implements Expr {
         return Boolean.toString(value);
     }
 
-    @Override
-    public <T> T accept(ExpressionVisitor<T> visitor) {
-        return visitor.acceptLiteralBoolExpr(this);
-    }
 }
