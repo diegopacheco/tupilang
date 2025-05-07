@@ -11,8 +11,12 @@ public class IfStatementTest {
     @Test
     public void testIfStatementCreation() {
         Expr condition = new LiteralIntExpr(1); // Truthy condition
-        List<Stmt> thenBranch = Collections.singletonList(new PrintStatement(new LiteralIntExpr(42)));
-        List<Stmt> elseBranch = Collections.singletonList(new PrintStatement(new LiteralIntExpr(24)));
+        List<Stmt> thenBranch = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(42))))
+        );
+        List<Stmt> elseBranch = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(24))))
+        );
 
         IfStatement stmt = new IfStatement(condition, thenBranch, elseBranch);
 
@@ -25,7 +29,9 @@ public class IfStatementTest {
     @Test
     public void testIfWithoutElse() {
         Expr condition = new LiteralIntExpr(1);
-        List<Stmt> thenBranch = Collections.singletonList(new PrintStatement(new LiteralIntExpr(42)));
+        List<Stmt> thenBranch = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(42))))
+        );
 
         IfStatement stmt = new IfStatement(condition, thenBranch, null);
 
@@ -41,11 +47,11 @@ public class IfStatementTest {
 
         List<Stmt> thenBranch = new ArrayList<>();
         thenBranch.add(new ValDeclaration("x", new LiteralIntExpr(1)));
-        thenBranch.add(new PrintStatement(new LiteralIntExpr(2)));
+        thenBranch.add(new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(2)))));
 
         List<Stmt> elseBranch = new ArrayList<>();
         elseBranch.add(new ValDeclaration("y", new LiteralIntExpr(3)));
-        elseBranch.add(new PrintStatement(new LiteralIntExpr(4)));
+        elseBranch.add(new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(4)))));
 
         IfStatement stmt = new IfStatement(condition, thenBranch, elseBranch);
 
@@ -56,20 +62,29 @@ public class IfStatementTest {
     @Test
     public void testDirectInspection() {
         Expr condition = new LiteralIntExpr(1);
-        List<Stmt> thenBranch = Collections.singletonList(new PrintStatement(new LiteralIntExpr(42)));
-        List<Stmt> elseBranch = Collections.singletonList(new PrintStatement(new LiteralIntExpr(24)));
+        List<Stmt> thenBranch = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(42))))
+        );
+        List<Stmt> elseBranch = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(24))))
+        );
 
         IfStatement stmt = new IfStatement(condition, thenBranch, elseBranch);
 
-        assertTrue(stmt.getCondition() instanceof LiteralIntExpr);
+        assertInstanceOf(LiteralIntExpr.class, stmt.getCondition());
         assertEquals(1, ((LiteralIntExpr)stmt.getCondition()).getValue());
 
         assertEquals(1, stmt.getThenBranch().size());
-        assertTrue(stmt.getThenBranch().get(0) instanceof PrintStatement);
+        assertInstanceOf(ExpressionStatement.class, stmt.getThenBranch().get(0));
 
-        PrintStatement thenStmt = (PrintStatement)stmt.getThenBranch().get(0);
-        assertTrue(thenStmt.getExpression() instanceof LiteralIntExpr);
-        assertEquals(42, ((LiteralIntExpr)thenStmt.getExpression()).getValue());
+        ExpressionStatement thenStmt = (ExpressionStatement)stmt.getThenBranch().get(0);
+        assertInstanceOf(CallExpr.class, thenStmt.getExpression());
+
+        CallExpr callExpr = (CallExpr)thenStmt.getExpression();
+        assertEquals("print", callExpr.getCallee());
+        assertEquals(1, callExpr.getArguments().size());
+        assertInstanceOf(LiteralIntExpr.class, callExpr.getArguments().get(0));
+        assertEquals(42, ((LiteralIntExpr)callExpr.getArguments().get(0)).getValue());
 
         assertTrue(stmt.hasElseBranch());
     }

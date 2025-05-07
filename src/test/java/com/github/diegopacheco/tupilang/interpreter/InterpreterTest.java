@@ -1,6 +1,8 @@
 package com.github.diegopacheco.tupilang.interpreter;
 
 import com.github.diegopacheco.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.parser.Parser;
+import com.github.diegopacheco.tupilang.token.Token;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
@@ -28,26 +30,40 @@ public class InterpreterTest {
     @Test
     public void testValDeclaration() {
         List<Stmt> program = Collections.singletonList(
-            new ValDeclaration("x", new LiteralIntExpr(42))
+                new ValDeclaration("x", new LiteralIntExpr(42))
         );
 
         interpreter.interpret(program);
     }
 
     @Test
-    public void testPrintStatement() {
-        List<Stmt> program = Collections.singletonList(
-            new PrintStatement(new LiteralIntExpr(42))
+    void testParsePrintStatement() {
+        List<Token> tokens = Arrays.asList(
+                new Token(Token.Type.PRINT, "print", 1),
+                new Token(Token.Type.STRING, "Hello, World!", 1),
+                new Token(Token.Type.SEMICOLON, ";", 1),
+                new Token(Token.Type.EOF, "", 1)
         );
 
-        interpreter.interpret(program);
-        assertEquals("42", outputStream.toString().trim());
+        Parser parser = new Parser(tokens);
+        List<Stmt> statements = parser.parse();
+
+        assertTrue(statements.size() == 1);
+        assertTrue(statements.get(0) instanceof ExpressionStatement);
+
+        ExpressionStatement exprStmt = (ExpressionStatement)statements.get(0);
+        assertTrue(exprStmt.getExpression() instanceof CallExpr);
+
+        CallExpr callExpr = (CallExpr)exprStmt.getExpression();
+        assertEquals("print", callExpr.getCallee());
+        assertTrue(callExpr.getArguments().size() == 1);
+        assertTrue(callExpr.getArguments().get(0) instanceof LiteralStringExpr);
     }
 
     @Test
     public void testStringLiteral() {
         List<Stmt> program = Collections.singletonList(
-            new PrintStatement(new LiteralStringExpr("hello"))
+                new ExpressionStatement(new CallExpr("print", List.of(new LiteralStringExpr("hello"))))
         );
 
         interpreter.interpret(program);
@@ -57,8 +73,8 @@ public class InterpreterTest {
     @Test
     public void testVariableAccess() {
         List<Stmt> program = Arrays.asList(
-            new ValDeclaration("x", new LiteralIntExpr(42)),
-            new PrintStatement(new VariableExpr("x"))
+                new ValDeclaration("x", new LiteralIntExpr(42)),
+                new ExpressionStatement(new CallExpr("print", List.of(new VariableExpr("x"))))
         );
 
         interpreter.interpret(program);
@@ -68,11 +84,13 @@ public class InterpreterTest {
     @Test
     public void testBinaryExpression() {
         List<Stmt> program = Collections.singletonList(
-            new PrintStatement(new BinaryExpr(
-                new LiteralIntExpr(40),
-                "+",
-                new LiteralIntExpr(2)
-            ))
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new BinaryExpr(
+                                new LiteralIntExpr(40),
+                                "+",
+                                new LiteralIntExpr(2)
+                        )
+                )))
         );
 
         interpreter.interpret(program);
@@ -82,11 +100,13 @@ public class InterpreterTest {
     @Test
     public void testStringConcatenation() {
         List<Stmt> program = Collections.singletonList(
-            new PrintStatement(new BinaryExpr(
-                new LiteralStringExpr("hello "),
-                "+",
-                new LiteralStringExpr("world")
-            ))
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new BinaryExpr(
+                                new LiteralStringExpr("hello "),
+                                "+",
+                                new LiteralStringExpr("world")
+                        )
+                )))
         );
 
         interpreter.interpret(program);
@@ -97,29 +117,33 @@ public class InterpreterTest {
     public void testIfStatement() {
         // val x = 10;
         // if (x == 10) {
-        //   print "true branch";
+        //   print("true branch");
         // } else {
-        //   print "false branch";
+        //   print("false branch");
         // }
         List<Stmt> program = new ArrayList<>();
         program.add(new ValDeclaration("x", new LiteralIntExpr(10)));
 
         List<Stmt> thenBranch = Collections.singletonList(
-            new PrintStatement(new LiteralStringExpr("true branch"))
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new LiteralStringExpr("true branch")
+                )))
         );
 
         List<Stmt> elseBranch = Collections.singletonList(
-            new PrintStatement(new LiteralStringExpr("false branch"))
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new LiteralStringExpr("false branch")
+                )))
         );
 
         program.add(new IfStatement(
-            new BinaryExpr(
-                new VariableExpr("x"),
-                "==",
-                new LiteralIntExpr(10)
-            ),
-            thenBranch,
-            elseBranch
+                new BinaryExpr(
+                        new VariableExpr("x"),
+                        "==",
+                        new LiteralIntExpr(10)
+                ),
+                thenBranch,
+                elseBranch
         ));
 
         interpreter.interpret(program);
@@ -130,29 +154,33 @@ public class InterpreterTest {
     public void testIfElseStatement() {
         // val x = 5;
         // if (x == 10) {
-        //   print "true branch";
+        //   print("true branch");
         // } else {
-        //   print "false branch";
+        //   print("false branch");
         // }
         List<Stmt> program = new ArrayList<>();
         program.add(new ValDeclaration("x", new LiteralIntExpr(5)));
 
         List<Stmt> thenBranch = Collections.singletonList(
-            new PrintStatement(new LiteralStringExpr("true branch"))
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new LiteralStringExpr("true branch")
+                )))
         );
 
         List<Stmt> elseBranch = Collections.singletonList(
-            new PrintStatement(new LiteralStringExpr("false branch"))
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new LiteralStringExpr("false branch")
+                )))
         );
 
         program.add(new IfStatement(
-            new BinaryExpr(
-                new VariableExpr("x"),
-                "==",
-                new LiteralIntExpr(10)
-            ),
-            thenBranch,
-            elseBranch
+                new BinaryExpr(
+                        new VariableExpr("x"),
+                        "==",
+                        new LiteralIntExpr(10)
+                ),
+                thenBranch,
+                elseBranch
         ));
 
         interpreter.interpret(program);
@@ -164,22 +192,22 @@ public class InterpreterTest {
         // fn add(a, b) -> int {
         //   return a + b;
         // }
-        // print add(5, 3);
+        // print(add(5, 3));
         List<Stmt> program = new ArrayList<>();
 
         // Function parameters
         List<Param> params = Arrays.asList(
-            new Param("a", "int"),
-            new Param("b", "int")
+                new Param("a", "int"),
+                new Param("b", "int")
         );
 
         // Function body
         List<Stmt> body = Collections.singletonList(
-            new ReturnStatement(new BinaryExpr(
-                new VariableExpr("a"),
-                "+",
-                new VariableExpr("b")
-            ))
+                new ReturnStatement(new BinaryExpr(
+                        new VariableExpr("a"),
+                        "+",
+                        new VariableExpr("b")
+                ))
         );
 
         // Function definition
@@ -187,11 +215,13 @@ public class InterpreterTest {
 
         // Function call
         List<Expr> arguments = Arrays.asList(
-            new LiteralIntExpr(5),
-            new LiteralIntExpr(3)
+                new LiteralIntExpr(5),
+                new LiteralIntExpr(3)
         );
 
-        program.add(new PrintStatement(new CallExpr("add", arguments)));
+        program.add(new ExpressionStatement(new CallExpr("print", List.of(
+                new CallExpr("add", arguments)
+        ))));
 
         interpreter.interpret(program);
         assertEquals("8", outputStream.toString().trim());
@@ -203,51 +233,48 @@ public class InterpreterTest {
         //   return a + b;
         // }
         // fn multiply(x, y) -> int {
-        //   return x * y;  // Assuming multiplication is supported
+        //   return x * y;
         // }
-        // print add(2, multiply(3, 4));  // Should print 14
-
-        // For this test, we'll simulate the result without multiplication
-        // by directly returning 12 from the multiply function
+        // print(add(2, multiply(3, 4)));  // Should print 14
 
         List<Stmt> program = new ArrayList<>();
 
         // add function
         List<Param> addParams = Arrays.asList(
-            new Param("a", "int"),
-            new Param("b", "int")
+                new Param("a", "int"),
+                new Param("b", "int")
         );
         List<Stmt> addBody = Collections.singletonList(
-            new ReturnStatement(new BinaryExpr(
-                new VariableExpr("a"),
-                "+",
-                new VariableExpr("b")
-            ))
+                new ReturnStatement(new BinaryExpr(
+                        new VariableExpr("a"),
+                        "+",
+                        new VariableExpr("b")
+                ))
         );
         program.add(new FunctionDefinition("add", addParams, "int", addBody));
 
-        // multiply function - simplified to just return 12
         List<Param> multiplyParams = Arrays.asList(
-            new Param("x", "int"),
-            new Param("y", "int")
+                new Param("x", "int"),
+                new Param("y", "int")
         );
         List<Stmt> multiplyBody = Collections.singletonList(
-            new ReturnStatement(new LiteralIntExpr(12))
+                new ReturnStatement(new LiteralIntExpr(12))
         );
         program.add(new FunctionDefinition("multiply", multiplyParams, "int", multiplyBody));
 
-        // Call add(2, multiply(3, 4))
         List<Expr> multiplyArgs = Arrays.asList(
-            new LiteralIntExpr(3),
-            new LiteralIntExpr(4)
+                new LiteralIntExpr(3),
+                new LiteralIntExpr(4)
         );
 
         List<Expr> addArgs = Arrays.asList(
-            new LiteralIntExpr(2),
-            new CallExpr("multiply", multiplyArgs)
+                new LiteralIntExpr(2),
+                new CallExpr("multiply", multiplyArgs)
         );
 
-        program.add(new PrintStatement(new CallExpr("add", addArgs)));
+        program.add(new ExpressionStatement(new CallExpr("print", List.of(
+                new CallExpr("add", addArgs)
+        ))));
 
         interpreter.interpret(program);
         assertEquals("14", outputStream.toString().trim());

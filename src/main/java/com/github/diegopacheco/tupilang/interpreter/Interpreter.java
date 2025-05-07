@@ -1,12 +1,23 @@
 package com.github.diegopacheco.tupilang.interpreter;
 
 import com.github.diegopacheco.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.std.PrintSTD;
+import com.github.diegopacheco.tupilang.std.StandardFunction;
 
 import java.util.*;
 
 public class Interpreter {
     private final Map<String, Object> environment = new HashMap<>();
     private final Map<String, FunctionDefinition> functions = new HashMap<>();
+    private final Map<String, StandardFunction> stdFunctions = new HashMap<>();
+
+    public Interpreter() {
+        registerStandardFunction(new PrintSTD());
+    }
+
+    private void registerStandardFunction(StandardFunction function) {
+        stdFunctions.put(function.getName(), function);
+    }
 
     public void interpret(List<Stmt> statements) {
         Object lastValue = null;
@@ -22,10 +33,6 @@ public class Interpreter {
                 value = evaluate(val.getInitializer());
             }
             environment.put(val.getName(), value);
-            return null;
-        } else if (stmt instanceof PrintStatement print) {
-            Object value = evaluate(print.getExpression());
-            System.out.println(stringify(value));
             return null;
         } else if (stmt instanceof ExpressionStatement expr) {
             Object result = evaluate(expr.getExpression());
@@ -112,8 +119,16 @@ public class Interpreter {
 
     private Object evaluateCall(CallExpr expr) {
         String callee = expr.getCallee();
-        FunctionDefinition function = functions.get(callee);
+        StandardFunction stdFunc = stdFunctions.get(callee);
+        if (stdFunc != null) {
+            List<Object> arguments = new ArrayList<>();
+            for (Expr argument : expr.getArguments()) {
+                arguments.add(evaluate(argument));
+            }
+            return stdFunc.execute(arguments.toArray());
+        }
 
+        FunctionDefinition function = functions.get(callee);
         if (function == null) {
             throw new RuntimeException("Undefined function: " + callee);
         }
@@ -123,21 +138,16 @@ public class Interpreter {
             arguments.add(evaluate(argument));
         }
 
-        // Check argument count
         if (arguments.size() != function.getParameters().size()) {
             throw new RuntimeException("Expected " + function.getParameters().size() +
                     " arguments but got " + arguments.size());
         }
 
-        // Create a new environment for the function execution
         Map<String, Object> oldEnvironment = new HashMap<>(environment);
-
-        // Bind arguments to parameters
         for (int i = 0; i < arguments.size(); i++) {
             environment.put(function.getParameters().get(i).getName(), arguments.get(i));
         }
 
-        // Execute function body
         Object returnValue = null;
         try {
             for (Stmt stmt : function.getBody()) {

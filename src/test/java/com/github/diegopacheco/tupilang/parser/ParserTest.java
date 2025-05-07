@@ -113,10 +113,15 @@ public class ParserTest {
         List<Stmt> statements = parser.parse();
 
         assertEquals(1, statements.size());
-        assertTrue(statements.get(0) instanceof PrintStatement);
+        assertTrue(statements.get(0) instanceof ExpressionStatement);
 
-        PrintStatement printStmt = (PrintStatement) statements.get(0);
-        assertTrue(printStmt.getExpression() instanceof LiteralStringExpr);
+        ExpressionStatement exprStmt = (ExpressionStatement) statements.get(0);
+        assertTrue(exprStmt.getExpression() instanceof CallExpr);
+
+        CallExpr callExpr = (CallExpr) exprStmt.getExpression();
+        assertEquals("print", callExpr.getCallee());
+        assertEquals(1, callExpr.getArguments().size());
+        assertTrue(callExpr.getArguments().get(0) instanceof LiteralStringExpr);
     }
 
     @Test

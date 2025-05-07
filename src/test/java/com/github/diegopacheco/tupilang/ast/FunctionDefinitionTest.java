@@ -62,7 +62,7 @@ public class FunctionDefinitionTest {
     public void testComplexFunctionBody() {
         List<Stmt> body = new ArrayList<>();
         body.add(new ValDeclaration("x", new LiteralIntExpr(10)));
-        body.add(new PrintStatement(new LiteralIntExpr(20)));
+        body.add(new ExpressionStatement(new CallExpr("print", List.of(new LiteralIntExpr(20)))));
         body.add(new ReturnStatement(new LiteralIntExpr(30)));
 
         FunctionDefinition function = new FunctionDefinition(
@@ -75,7 +75,11 @@ public class FunctionDefinitionTest {
         assertEquals(3, function.getBody().size());
         assertEquals("int", function.getReturnType());
         assertTrue(function.getBody().get(0) instanceof ValDeclaration);
-        assertTrue(function.getBody().get(1) instanceof PrintStatement);
+        assertTrue(function.getBody().get(1) instanceof ExpressionStatement);
+        ExpressionStatement printStmt = (ExpressionStatement) function.getBody().get(1);
+        assertTrue(printStmt.getExpression() instanceof CallExpr);
+        CallExpr callExpr = (CallExpr) printStmt.getExpression();
+        assertEquals("print", callExpr.getCallee());
         assertTrue(function.getBody().get(2) instanceof ReturnStatement);
     }
 

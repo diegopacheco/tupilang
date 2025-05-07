@@ -97,11 +97,12 @@ public class Parser {
         }
 
         if (match(Token.Type.PRINT)) {
-            consume(Token.Type.LPAREN, "Expected '('");
-            Expr expr = parseExpression();
-            consume(Token.Type.RPAREN, "Expected ')'");
-            consume(Token.Type.SEMICOLON, "Expected ';'");
-            return new PrintStatement(expr);
+            List<Expr> arguments = new ArrayList<>();
+            if (!check(Token.Type.SEMICOLON)) {
+                arguments.add(parseExpression());
+            }
+            consume(Token.Type.SEMICOLON, "Expected ';' after value.");
+            return new ExpressionStatement(new CallExpr("print", arguments));
         }
 
         if (match(Token.Type.DEF)) {
