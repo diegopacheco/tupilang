@@ -103,4 +103,17 @@ public class REPLTest {
         String output = outputStream.toString();
         assertTrue(output.contains("hello world tupi"), "Output should contain 'hello world tupi'");
     }
+
+    @Test
+    public void testLenStdfunc() throws Exception {
+    String fileContent = Files.readString(Path.of("samples/len.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("26"), "Output should contain '26'");
+    }
+
 }
