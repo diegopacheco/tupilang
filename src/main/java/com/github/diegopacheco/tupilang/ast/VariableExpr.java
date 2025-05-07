@@ -11,8 +11,4 @@ public class VariableExpr implements Expr {
         return name;
     }
 
-    @Override
-    public <T> T accept(ExpressionVisitor<T> visitor) {
-        return visitor.visitVariableExpr(this);
-    }
 }
