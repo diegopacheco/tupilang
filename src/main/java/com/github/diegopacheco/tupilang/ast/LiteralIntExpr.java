@@ -11,8 +11,4 @@ public class LiteralIntExpr implements Expr {
         return value;
     }
 
-    @Override
-    public <T> T accept(ExpressionVisitor<T> visitor) {
-        return visitor.visitLiteralIntExpr(this);
-    }
 }
