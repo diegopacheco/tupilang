@@ -23,8 +23,4 @@ public class BinaryExpr implements Expr {
         return right;
     }
 
-    @Override
-    public <T> T accept(ExpressionVisitor<T> visitor) {
-        return visitor.visitBinaryExpr(this);
-    }
 }
