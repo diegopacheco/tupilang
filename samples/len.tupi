@@ -1,2 +1,2 @@
-val x = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-print(len(x)); // prints 26
+val x = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // 26 letters
+print(len(x));
