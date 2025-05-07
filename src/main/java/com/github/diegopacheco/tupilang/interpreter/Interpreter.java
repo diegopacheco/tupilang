@@ -59,22 +59,14 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
     }
 
     private String stringify(Object obj) {
-        if (obj == null) return "null";
+        return switch (obj) {
+            case null -> "null";
+            case Boolean b -> obj.toString();
+            case Integer i -> obj.toString();
+            case String s -> s;
+            default -> obj.toString();
+        };
 
-        if (obj instanceof Boolean) {
-            return obj.toString();
-        }
-
-        if (obj instanceof Integer) {
-            return obj.toString();
-        }
-
-        // For string literals, we already have the raw content
-        if (obj instanceof String) {
-            return (String) obj;
-        }
-
-        return obj.toString();
     }
 
     @Override
@@ -94,24 +86,29 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
         Object left = evaluate(expr.getLeft());
         Object right = evaluate(expr.getRight());
 
-        if (expr.getOperator().equals("+")) {
-            if (left instanceof Integer && right instanceof Integer) {
-                return (Integer) left + (Integer) right;
+        switch (expr.getOperator()) {
+            case "+" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left + (Integer) right;
+                }
+                if (left instanceof String || right instanceof String) {
+                    return left.toString() + right.toString();
+                }
             }
-            if (left instanceof String || right instanceof String) {
-                return left.toString() + right.toString();
+            case "-" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left - (Integer) right;
+                }
             }
-        } else if (expr.getOperator().equals("-")) {
-            if (left instanceof Integer && right instanceof Integer) {
-                return (Integer) left - (Integer) right;
+            case "*" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left * (Integer) right;
+                }
             }
-        } else if (expr.getOperator().equals("*")) {
-            if (left instanceof Integer && right instanceof Integer) {
-                return (Integer) left * (Integer) right;
-            }
-        } else if (expr.getOperator().equals("/")) {
-            if (left instanceof Integer && right instanceof Integer) {
-                return (Integer) left / (Integer) right;
+            case "/" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left / (Integer) right;
+                }
             }
         }
 
