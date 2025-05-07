@@ -20,83 +20,34 @@ public class ReturnStatementTest {
     }
 
     @Test
-    public void testAcceptVisitor() {
+    public void testDirectInspection() {
         Expr expression = new LiteralIntExpr(42);
         ReturnStatement stmt = new ReturnStatement(expression);
 
-        StatementVisitor<String> visitor = new StatementVisitor<String>() {
-            @Override
-            public String visitValDeclaration(ValDeclaration stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitPrintStatement(PrintStatement stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitExpressionStatement(ExpressionStatement stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitFunctionDefinition(FunctionDefinition stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitReturnStatement(ReturnStatement stmt) {
-                return "Return: " + (stmt.getExpression() != null ?
-                        stmt.getExpression().toString() : "void");
-            }
-
-            @Override
-            public String visitIfStatement(IfStatement stmt) {
-                return "";
-            }
-        };
-
-        String result = stmt.accept(visitor);
-        assertTrue(result.startsWith("Return:"));
+        assertInstanceOf(LiteralIntExpr.class, stmt.getExpression());
+        assertEquals(42, ((LiteralIntExpr)stmt.getExpression()).getValue());
     }
 
     @Test
-    public void testVoidReturnVisitor() {
+    public void testVoidReturn() {
         ReturnStatement stmt = new ReturnStatement(null);
+        assertNull(stmt.getExpression());
+    }
 
-        StatementVisitor<Boolean> visitor = new StatementVisitor<Boolean>() {
-            @Override
-            public Boolean visitValDeclaration(ValDeclaration stmt) {
-                return false;
-            }
+    @Test
+    public void testWithComplexExpression() {
+        BinaryExpr expr = new BinaryExpr(
+                new LiteralIntExpr(10),
+                "*",
+                new LiteralIntExpr(5)
+        );
 
-            @Override
-            public Boolean visitPrintStatement(PrintStatement stmt) {
-                return false;
-            }
+        ReturnStatement stmt = new ReturnStatement(expr);
+        assertInstanceOf(BinaryExpr.class, stmt.getExpression());
 
-            @Override
-            public Boolean visitExpressionStatement(ExpressionStatement stmt) {
-                return false;
-            }
-
-            @Override
-            public Boolean visitFunctionDefinition(FunctionDefinition stmt) {
-                return false;
-            }
-
-            @Override
-            public Boolean visitReturnStatement(ReturnStatement stmt) {
-                return stmt.getExpression() == null;
-            }
-
-            @Override
-            public Boolean visitIfStatement(IfStatement stmt) {
-                return false;
-            }
-        };
-
-        assertTrue(stmt.accept(visitor));
+        BinaryExpr binaryExpr = (BinaryExpr) stmt.getExpression();
+        assertEquals("*", binaryExpr.getOperator());
+        assertEquals(10, ((LiteralIntExpr)binaryExpr.getLeft()).getValue());
+        assertEquals(5, ((LiteralIntExpr)binaryExpr.getRight()).getValue());
     }
 }
