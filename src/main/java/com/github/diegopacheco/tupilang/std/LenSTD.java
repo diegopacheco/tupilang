@@ -7,7 +7,6 @@ public class LenSTD implements StandardFunction {
         return "len";
     }
 
-
     @Override
     public Object execute(Object... args) {
         if (args.length == 0) {
@@ -20,9 +19,8 @@ public class LenSTD implements StandardFunction {
         }
 
         if (arg instanceof String str) {
-            // Remove quotes if the string still has them
-            if (str.startsWith("\"") && str.endsWith("\"")) {
-                return str.length() - 2; // Subtract the two quote characters
+            if (str.length() >= 2 && str.startsWith("\"") && str.endsWith("\"")) {
+                return str.length() - 2;
             }
             return str.length();
         }
@@ -31,10 +29,6 @@ public class LenSTD implements StandardFunction {
             return array.length;
         }
 
-        if (!(arg instanceof String)) {
-            throw new RuntimeException("len() requires a string argument");
-        }
-
-        return arg.toString().length();
+        throw new RuntimeException("len() requires a string or array argument");
     }
 }
