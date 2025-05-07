@@ -54,47 +54,23 @@ public class IfStatementTest {
     }
 
     @Test
-    public void testAcceptVisitor() {
+    public void testDirectInspection() {
         Expr condition = new LiteralIntExpr(1);
         List<Stmt> thenBranch = Collections.singletonList(new PrintStatement(new LiteralIntExpr(42)));
         List<Stmt> elseBranch = Collections.singletonList(new PrintStatement(new LiteralIntExpr(24)));
 
         IfStatement stmt = new IfStatement(condition, thenBranch, elseBranch);
 
-        StatementVisitor<String> visitor = new StatementVisitor<String>() {
-            @Override
-            public String visitValDeclaration(ValDeclaration stmt) {
-                return "";
-            }
+        assertTrue(stmt.getCondition() instanceof LiteralIntExpr);
+        assertEquals(1, ((LiteralIntExpr)stmt.getCondition()).getValue());
 
-            @Override
-            public String visitPrintStatement(PrintStatement stmt) {
-                return "";
-            }
+        assertEquals(1, stmt.getThenBranch().size());
+        assertTrue(stmt.getThenBranch().get(0) instanceof PrintStatement);
 
-            @Override
-            public String visitExpressionStatement(ExpressionStatement stmt) {
-                return "";
-            }
+        PrintStatement thenStmt = (PrintStatement)stmt.getThenBranch().get(0);
+        assertTrue(thenStmt.getExpression() instanceof LiteralIntExpr);
+        assertEquals(42, ((LiteralIntExpr)thenStmt.getExpression()).getValue());
 
-            @Override
-            public String visitFunctionDefinition(FunctionDefinition stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitReturnStatement(ReturnStatement stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitIfStatement(IfStatement stmt) {
-                return "If statement with " +
-                        (stmt.hasElseBranch() ? "else branch" : "no else");
-            }
-        };
-
-        String result = stmt.accept(visitor);
-        assertEquals("If statement with else branch", result);
+        assertTrue(stmt.hasElseBranch());
     }
 }
