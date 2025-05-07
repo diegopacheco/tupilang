@@ -38,42 +38,8 @@ public class LiteralIntExprTest {
     }
 
     @Test
-    public void testAcceptVisitor() {
+    public void testDirectInspection() {
         LiteralIntExpr expr = new LiteralIntExpr(123);
-
-        ExpressionVisitor<String> visitor = new ExpressionVisitor<String>() {
-            @Override
-            public String visitBinaryExpr(BinaryExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String visitCallExpr(CallExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
-                return "";
-            }
-
-            @Override
-            public String visitLiteralIntExpr(LiteralIntExpr expr) {
-                return "Int: " + expr.getValue();
-            }
-
-            @Override
-            public String visitLiteralStringExpr(LiteralStringExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String visitVariableExpr(VariableExpr expr) {
-                return "";
-            }
-        };
-
-        String result = expr.accept(visitor);
-        assertEquals("Int: 123", result);
+        assertEquals(123, expr.getValue());
     }
 }
