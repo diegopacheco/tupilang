@@ -80,47 +80,24 @@ public class FunctionDefinitionTest {
     }
 
     @Test
-    public void testAcceptVisitor() {
+    public void testDirectInspection() {
         FunctionDefinition function = new FunctionDefinition(
-                "visitorTest",
+                "testFunction",
                 Arrays.asList(new Param("a", "int"), new Param("b", "string")),
                 "boolean",
                 Collections.singletonList(new ReturnStatement(new LiteralIntExpr(42)))
         );
 
-        StatementVisitor<String> visitor = new StatementVisitor<String>() {
-            @Override
-            public String visitValDeclaration(ValDeclaration stmt) {
-                return "";
-            }
+        assertEquals("testFunction", function.getName());
+        assertEquals(2, function.getParameters().size());
+        assertEquals("int", function.getParameters().get(0).getType());
+        assertEquals("string", function.getParameters().get(1).getType());
+        assertEquals("boolean", function.getReturnType());
+        assertEquals(1, function.getBody().size());
+        assertTrue(function.getBody().get(0) instanceof ReturnStatement);
 
-            @Override
-            public String visitPrintStatement(PrintStatement stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitExpressionStatement(ExpressionStatement stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitFunctionDefinition(FunctionDefinition stmt) {
-                return "Function: " + stmt.getName();
-            }
-
-            @Override
-            public String visitReturnStatement(ReturnStatement stmt) {
-                return "";
-            }
-
-            @Override
-            public String visitIfStatement(IfStatement stmt) {
-                return "";
-            }
-        };
-
-        String result = function.accept(visitor);
-        assertEquals("Function: visitorTest", result);
+        ReturnStatement returnStmt = (ReturnStatement) function.getBody().getFirst();
+        assertTrue(returnStmt.getExpression() instanceof LiteralIntExpr);
+        assertEquals(42, ((LiteralIntExpr)returnStmt.getExpression()).getValue());
     }
 }
