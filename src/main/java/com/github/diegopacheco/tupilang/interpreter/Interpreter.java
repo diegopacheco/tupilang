@@ -4,85 +4,79 @@ import com.github.diegopacheco.tupilang.ast.*;
 
 import java.util.*;
 
-public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<Void> {
+public class Interpreter {
     private final Map<String, Object> environment = new HashMap<>();
     private final Map<String, FunctionDefinition> functions = new HashMap<>();
 
-    public void interpret(List<Stmt> statements) {
+    public Object interpret(List<Stmt> statements) {
+        Object lastValue = null;
         for (Stmt statement : statements) {
-            execute(statement);
+            lastValue = execute(statement);
         }
+        return lastValue;
     }
 
-    private void execute(Stmt stmt) {
-        stmt.accept(this);
-    }
-
-    @Override
-    public Void visitValDeclaration(ValDeclaration stmt) {
-        Object value = null;
-        if (stmt.getInitializer() != null) {
-            value = evaluate(stmt.getInitializer());
-        }
-        environment.put(stmt.getName(), value);
-        return null;
-    }
-
-    @Override
-    public Void visitIfStatement(IfStatement stmt) {
-        Object condition = evaluate(stmt.getCondition());
-
-        if (isTruthy(condition)) {
-            for (Stmt statement : stmt.getThenBranch()) {
-                execute(statement);
+    public Object execute(Stmt stmt) {
+        if (stmt instanceof ValDeclaration val) {
+            Object value = null;
+            if (val.getInitializer() != null) {
+                value = evaluate(val.getInitializer());
             }
-        } else if (stmt.hasElseBranch()) {
-            for (Stmt statement : stmt.getElseBranch()) {
-                execute(statement);
+            environment.put(val.getName(), value);
+            return null;
+        } else if (stmt instanceof PrintStatement print) {
+            Object value = evaluate(print.getExpression());
+            System.out.println(stringify(value));
+            return null;
+        } else if (stmt instanceof ExpressionStatement expr) {
+            Object result = evaluate(expr.getExpression());
+            if (expr.getExpression() instanceof VariableExpr) {
+                System.out.println(stringify(result));
             }
+            return result;
+        } else if (stmt instanceof FunctionDefinition func) {
+            functions.put(func.getName(), func);
+            return null;
+        } else if (stmt instanceof ReturnStatement ret) {
+            return evaluate(ret.getExpression());
+        } else if (stmt instanceof IfStatement ifStmt) {
+            Object condition = evaluate(ifStmt.getCondition());
+
+            if (isTruthy(condition)) {
+                for (Stmt statement : ifStmt.getThenBranch()) {
+                    execute(statement);
+                }
+            } else if (ifStmt.getElseBranch() != null) {
+                for (Stmt statement : ifStmt.getElseBranch()) {
+                    execute(statement);
+                }
+            }
+            return null;
         }
-        return null;
+        throw new RuntimeException("Unknown statement type: " + stmt.getClass().getName());
     }
 
-    private boolean isTruthy(Object obj) {
-        if (obj == null) return false;
-        if (obj instanceof Boolean) return (Boolean) obj;
-        if (obj instanceof Integer) return (Integer) obj != 0;
-        return true;
+    public Object evaluate(Expr expr) {
+        if (expr instanceof LiteralIntExpr lit) {
+            return lit.getValue();
+        } else if (expr instanceof LiteralStringExpr lit) {
+            return lit.getValue();
+        } else if (expr instanceof LiteralBoolExpr lit) {
+            return lit.value;
+        } else if (expr instanceof VariableExpr var) {
+            if (!environment.containsKey(var.getName())) {
+                throw new RuntimeException("Undefined variable: " + var.getName());
+            }
+            return environment.get(var.getName());
+        } else if (expr instanceof BinaryExpr binary) {
+            return evaluateBinary(binary);
+        } else if (expr instanceof CallExpr call) {
+            return evaluateCall(call);
+        }
+        throw new RuntimeException("Unknown expression type: " + expr.getClass().getName());
     }
 
-    @Override
-    public Void visitPrintStatement(PrintStatement stmt) {
-        Object value = evaluate(stmt.getExpression());
-        System.out.println(stringify(value));
-        return null;
-    }
-
-    private String stringify(Object obj) {
-        return switch (obj) {
-            case null -> "null";
-            case Boolean b -> obj.toString();
-            case Integer i -> obj.toString();
-            case String s -> s;
-            default -> obj.toString();
-        };
-
-    }
-
-    @Override
-    public Void visitReturnStatement(ReturnStatement stmt) {
-        Object returnValue = evaluate(stmt.getExpression());
-        return null;
-    }
-
-    @Override
-    public Void visitFunctionDefinition(FunctionDefinition stmt) {
-        functions.put(stmt.getName(), stmt);
-        return null;
-    }
-
-    @Override
-    public Object visitBinaryExpr(BinaryExpr expr) {
+    private Object evaluateBinary(BinaryExpr expr) {
         Object left = evaluate(expr.getLeft());
         Object right = evaluate(expr.getRight());
 
@@ -110,49 +104,18 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
                     return (Integer) left / (Integer) right;
                 }
             }
+            case "==" -> {
+                return Objects.equals(left, right);
+            }
         }
-
-        if (expr.getOperator().equals("==")) {
-            return Objects.equals(left, right);
-        }
-
         throw new RuntimeException("Unsupported operation: " + expr.getOperator());
     }
 
-    @Override
-    public Object visitVariableExpr(VariableExpr expr) {
-        if (!environment.containsKey(expr.getName())) {
-            throw new RuntimeException("Undefined variable: " + expr.getName());
-        }
-        return environment.get(expr.getName());
-    }
-
-    @Override
-    public Object visitLiteralIntExpr(LiteralIntExpr expr) {
-        return expr.getValue();
-    }
-
-    @Override
-    public Object visitLiteralStringExpr(LiteralStringExpr expr) {
-        return expr.getValue();
-    }
-
-    private Object evaluate(Expr expr) {
-        return expr.accept(this);
-    }
-
-    @Override
-    public Void visitExpressionStatement(ExpressionStatement stmt) {
-        evaluate(stmt.getExpression());
-        return null;
-    }
-
-    @Override
-    public Object visitCallExpr(CallExpr expr) {
+    private Object evaluateCall(CallExpr expr) {
         String callee = expr.getCallee();
         FunctionDefinition function = functions.get(callee);
 
-        if (null==function) {
+        if (function == null) {
             throw new RuntimeException("Undefined function: " + callee);
         }
 
@@ -194,8 +157,18 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
         return returnValue;
     }
 
-    @Override
-    public Object acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
-        return literalBoolExpr.value;
+    private boolean isTruthy(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof Boolean) return (Boolean) obj;
+        if (obj instanceof Integer) return (Integer) obj != 0;
+        return true;
+    }
+
+    private String stringify(Object obj) {
+        if (obj == null) return "null";
+        if (obj instanceof Boolean) return obj.toString();
+        if (obj instanceof Integer) return obj.toString();
+        if (obj instanceof String) return (String) obj;
+        return obj.toString();
     }
 }
