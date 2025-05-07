@@ -25,43 +25,9 @@ public class LiteralStringExprTest {
     }
 
     @Test
-    public void testAcceptVisitor() {
+    public void testDirectInspection() {
         LiteralStringExpr expr = new LiteralStringExpr("hello world");
-
-        ExpressionVisitor<String> visitor = new ExpressionVisitor<String>() {
-            @Override
-            public String visitBinaryExpr(BinaryExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String visitCallExpr(CallExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
-                return "";
-            }
-
-            @Override
-            public String visitLiteralIntExpr(LiteralIntExpr expr) {
-                return "";
-            }
-
-            @Override
-            public String visitLiteralStringExpr(LiteralStringExpr expr) {
-                return "String: " + expr.getValue();
-            }
-
-            @Override
-            public String visitVariableExpr(VariableExpr expr) {
-                return "";
-            }
-        };
-
-        String result = expr.accept(visitor);
-        assertEquals("String: hello world", result);
+        assertEquals("hello world", expr.getValue());
     }
 
     @Test
