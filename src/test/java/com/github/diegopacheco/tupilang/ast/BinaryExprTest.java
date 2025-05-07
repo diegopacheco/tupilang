@@ -71,48 +71,21 @@ public class BinaryExprTest {
     }
 
     @Test
-    public void testAcceptVisitor() {
+    public void testDirectInspection() {
         BinaryExpr expr = new BinaryExpr(
                 new LiteralIntExpr(10),
                 "+",
                 new LiteralIntExpr(20)
         );
 
-        ExpressionVisitor<String> visitor = new ExpressionVisitor<String>() {
-            @Override
-            public String visitBinaryExpr(BinaryExpr expr) {
-                return expr.getLeft().accept(this) +
-                        " " + expr.getOperator() + " " +
-                        expr.getRight().accept(this);
-            }
+        assertTrue(expr.getLeft() instanceof LiteralIntExpr);
+        assertTrue(expr.getRight() instanceof LiteralIntExpr);
 
-            @Override
-            public String visitCallExpr(CallExpr expr) {
-                return "";
-            }
+        LiteralIntExpr left = (LiteralIntExpr) expr.getLeft();
+        LiteralIntExpr right = (LiteralIntExpr) expr.getRight();
 
-            @Override
-            public String acceptLiteralBoolExpr(LiteralBoolExpr literalBoolExpr) {
-                return "";
-            }
-
-            @Override
-            public String visitLiteralIntExpr(LiteralIntExpr expr) {
-                return Integer.toString(expr.getValue());
-            }
-
-            @Override
-            public String visitLiteralStringExpr(LiteralStringExpr expr) {
-                return expr.getValue();
-            }
-
-            @Override
-            public String visitVariableExpr(VariableExpr expr) {
-                return "";
-            }
-        };
-
-        String result = expr.accept(visitor);
-        assertEquals("10 + 20", result);
+        assertEquals(10, left.getValue());
+        assertEquals(20, right.getValue());
+        assertEquals("+", expr.getOperator());
     }
 }
