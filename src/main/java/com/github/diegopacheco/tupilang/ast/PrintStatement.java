@@ -11,8 +11,4 @@ public class PrintStatement implements Stmt {
         return expression;
     }
 
-    @Override
-    public <T> T accept(StatementVisitor<T> visitor) {
-        return visitor.visitPrintStatement(this);
-    }
 }
