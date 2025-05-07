@@ -152,7 +152,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
         String callee = expr.getCallee();
         FunctionDefinition function = functions.get(callee);
 
-        if (function == null) {
+        if (null==function) {
             throw new RuntimeException("Undefined function: " + callee);
         }
 
