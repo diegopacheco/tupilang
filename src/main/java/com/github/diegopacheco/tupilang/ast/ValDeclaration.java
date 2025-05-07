@@ -16,8 +16,4 @@ public class ValDeclaration implements Stmt {
         return initializer;
     }
 
-    @Override
-    public <T> T accept(StatementVisitor<T> visitor) {
-        return visitor.visitValDeclaration(this);
-    }
 }
