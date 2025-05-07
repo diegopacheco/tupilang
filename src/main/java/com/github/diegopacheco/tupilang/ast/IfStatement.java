@@ -28,9 +28,4 @@ public class IfStatement implements Stmt {
     public boolean hasElseBranch() {
         return elseBranch != null;
     }
-
-    @Override
-    public <T> T accept(StatementVisitor<T> visitor) {
-        return visitor.visitIfStatement(this);
-    }
 }
