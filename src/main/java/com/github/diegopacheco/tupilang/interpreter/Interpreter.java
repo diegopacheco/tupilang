@@ -8,12 +8,11 @@ public class Interpreter {
     private final Map<String, Object> environment = new HashMap<>();
     private final Map<String, FunctionDefinition> functions = new HashMap<>();
 
-    public Object interpret(List<Stmt> statements) {
+    public void interpret(List<Stmt> statements) {
         Object lastValue = null;
         for (Stmt statement : statements) {
             lastValue = execute(statement);
         }
-        return lastValue;
     }
 
     public Object execute(Stmt stmt) {
@@ -62,7 +61,7 @@ public class Interpreter {
         } else if (expr instanceof LiteralStringExpr lit) {
             return lit.getValue();
         } else if (expr instanceof LiteralBoolExpr lit) {
-            return lit.value;
+            return lit.getValue();
         } else if (expr instanceof VariableExpr var) {
             if (!environment.containsKey(var.getName())) {
                 throw new RuntimeException("Undefined variable: " + var.getName());
