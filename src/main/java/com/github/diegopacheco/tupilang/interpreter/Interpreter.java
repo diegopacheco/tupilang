@@ -1,6 +1,7 @@
 package com.github.diegopacheco.tupilang.interpreter;
 
 import com.github.diegopacheco.tupilang.ast.*;
+import com.github.diegopacheco.tupilang.std.LenSTD;
 import com.github.diegopacheco.tupilang.std.PrintSTD;
 import com.github.diegopacheco.tupilang.std.StandardFunction;
 
@@ -13,6 +14,7 @@ public class Interpreter {
 
     public Interpreter() {
         registerStandardFunction(new PrintSTD());
+        registerStandardFunction(new LenSTD());
     }
 
     private void registerStandardFunction(StandardFunction function) {
