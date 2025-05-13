@@ -12,12 +12,12 @@ Interesting things here:
 4. However, much more simple
 5. REPL
 6. So far supports:
- * Types: int, string, void, bool
+ * Types: int, string, void, bool, array
  * Keywords: if, return
  * Create functions with def, comments with //
- * Built-in functions: print
+ * Built-in functions: print, len
 
-Tupilang binary: jar size it's only **35KB** <br/>
+Tupilang binary: jar size it's only **37KB** <br/>
 Created by Diego Pacheco in APRIL/2025.
 
 ### Build 
@@ -115,50 +115,9 @@ test
 
 ```
 [INFO]
-[INFO] -------------------------------------------------------
-[INFO]  T E S T S
-[INFO] -------------------------------------------------------
-[INFO] Running com.github.diegopacheco.tupilang.lexer.LexerTest
-Unterminated string.
-[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.github.diegopacheco.tupilang.lexer.LexerTest
-[INFO] Running com.github.diegopacheco.tupilang.interpreter.InterpreterTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.github.diegopacheco.tupilang.interpreter.InterpreterTest
-[INFO] Running com.github.diegopacheco.tupilang.parser.ParserTest
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.github.diegopacheco.tupilang.parser.ParserTest
-[INFO] Running com.github.diegopacheco.tupilang.token.TokenTest
-[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.github.diegopacheco.tupilang.token.TokenTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.IfStatementTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.github.diegopacheco.tupilang.ast.IfStatementTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.FunctionDefinitionTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.github.diegopacheco.tupilang.ast.FunctionDefinitionTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.VariableExprTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.github.diegopacheco.tupilang.ast.VariableExprTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.LiteralStringExprTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.github.diegopacheco.tupilang.ast.LiteralStringExprTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.LiteralIntExprTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.github.diegopacheco.tupilang.ast.LiteralIntExprTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.ValDeclarationTest
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.github.diegopacheco.tupilang.ast.ValDeclarationTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.ReturnStatementTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.github.diegopacheco.tupilang.ast.ReturnStatementTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.BinaryExprTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.github.diegopacheco.tupilang.ast.BinaryExprTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.CallExprTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.github.diegopacheco.tupilang.ast.CallExprTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.PrintStatementTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.github.diegopacheco.tupilang.ast.PrintStatementTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.ExpressionStatementTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.github.diegopacheco.tupilang.ast.ExpressionStatementTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.ParamTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.github.diegopacheco.tupilang.ast.ParamTest
-[INFO] Running com.github.diegopacheco.tupilang.ast.LiteralBoolExprTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.github.diegopacheco.tupilang.ast.LiteralBoolExprTest
-[INFO] Running com.github.diegopacheco.tupilang.repl.REPLTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in com.github.diegopacheco.tupilang.repl.REPLTest
-[INFO]
 [INFO] Results:
 [INFO]
-[INFO] Tests run: 106, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 127, Failures: 0, Errors: 0, Skipped: 0
 [INFO]
 [INFO]
 ```
