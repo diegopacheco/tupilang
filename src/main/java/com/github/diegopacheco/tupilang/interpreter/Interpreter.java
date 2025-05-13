@@ -80,6 +80,30 @@ public class Interpreter {
             return evaluateBinary(binary);
         } else if (expr instanceof CallExpr call) {
             return evaluateCall(call);
+        } else if (expr instanceof ArrayLiteralExpr arrayLiteral) {
+            List<Object> elements = new ArrayList<>();
+            for (Expr element : arrayLiteral.getElements()) {
+                elements.add(evaluate(element));
+            }
+            return elements.toArray();
+        } else if (expr instanceof ArrayAccessExpr arrayAccess) {
+            Object array = evaluate(arrayAccess.getArray());
+            Object indexObj = evaluate(arrayAccess.getIndex());
+
+            if (!(array instanceof Object[])) {
+                throw new RuntimeException("Cannot use array access on non-array type");
+            }
+
+            if (!(indexObj instanceof Integer)) {
+                throw new RuntimeException("Array index must be an integer");
+            }
+
+            int index = (Integer) indexObj;
+            Object[] arrayValue = (Object[]) array;
+            if (index < 0 || index >= arrayValue.length) {
+                throw new RuntimeException("Array index out of bounds: " + index);
+            }
+            return arrayValue[index];
         }
         throw new RuntimeException("Unknown expression type: " + expr.getClass().getName());
     }
@@ -180,6 +204,17 @@ public class Interpreter {
         if (obj instanceof Boolean) return obj.toString();
         if (obj instanceof Integer) return obj.toString();
         if (obj instanceof String) return (String) obj;
+        if (obj instanceof Object[] array) {
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < array.length; i++) {
+                sb.append(stringify(array[i]));
+                if (i < array.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]");
+            return sb.toString();
+        }
         return obj.toString();
     }
 }
