@@ -46,6 +46,8 @@ public class Lexer {
             case ')': addToken(Token.Type.RPAREN); break;
             case '{': addToken(Token.Type.LBRACE); break;
             case '}': addToken(Token.Type.RBRACE); break;
+            case '[': addToken(Token.Type.LEFT_BRACKET); break;
+            case ']': addToken(Token.Type.RIGHT_BRACKET); break;
             case ',': addToken(Token.Type.COMMA); break;
             case '.': addToken(Token.Type.DOT); break;
             case '+': addToken(Token.Type.PLUS); break;
