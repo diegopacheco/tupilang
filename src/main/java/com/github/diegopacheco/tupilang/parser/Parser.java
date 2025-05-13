@@ -2,6 +2,7 @@ package com.github.diegopacheco.tupilang.parser;
 
 import com.github.diegopacheco.tupilang.ast.*;
 import com.github.diegopacheco.tupilang.token.Token;
+
 import java.util.*;
 
 public class Parser {
@@ -224,6 +225,9 @@ public class Parser {
         if (match(Token.Type.FALSE)) {
             return new LiteralBoolExpr(false);
         }
+        if (match(Token.Type.LEFT_BRACKET)) {
+            return parseArrayLiteral();
+        }
         if (match(Token.Type.IDENTIFIER)) {
             String name = previous().text;
 
@@ -231,17 +235,47 @@ public class Parser {
             if (check(Token.Type.LPAREN)) {
                 return parseCall(name);
             }
-            return new VariableExpr(name);
+
+            // Create the variable expression
+            Expr expr = new VariableExpr(name);
+
+            // Handle array access after variable
+            while (match(Token.Type.LEFT_BRACKET)) {
+                Expr index = parseExpression();
+                consume(Token.Type.RIGHT_BRACKET, "Expected ']' after array index");
+                expr = new ArrayAccessExpr(expr, index);
+            }
+
+            return expr;
         }
 
         // Handle parenthesized expressions
         if (match(Token.Type.LPAREN)) {
             Expr expr = parseExpression();
             consume(Token.Type.RPAREN, "Expected ')'");
+
+            // Handle array access after parenthesized expression
+            while (match(Token.Type.LEFT_BRACKET)) {
+                Expr index = parseExpression();
+                consume(Token.Type.RIGHT_BRACKET, "Expected ']' after array index");
+                expr = new ArrayAccessExpr(expr, index);
+            }
+
             return expr;
         }
 
         throw new RuntimeException("Unexpected expression: " + peek().type + " " + peek().text);
+    }
+
+    private Expr parseArrayLiteral() {
+        List<Expr> elements = new ArrayList<>();
+        if (!check(Token.Type.RIGHT_BRACKET)) {
+            do {
+                elements.add(parseExpression());
+            } while (match(Token.Type.COMMA));
+        }
+        consume(Token.Type.RIGHT_BRACKET, "Expect ']' after array elements.");
+        return new ArrayLiteralExpr(elements);
     }
 
     private Expr parseCall(String callee) {
