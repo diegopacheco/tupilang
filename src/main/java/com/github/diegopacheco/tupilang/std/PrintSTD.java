@@ -19,9 +19,20 @@ public class PrintSTD implements StandardFunction {
 
     private String stringify(Object obj) {
         if (obj == null) return "null";
-        if (obj instanceof Boolean) return obj.toString();
-        if (obj instanceof Integer) return obj.toString();
-        if (obj instanceof String) return (String) obj;
+        if (obj instanceof Boolean || obj instanceof Integer || obj instanceof String) {
+            return obj.toString();
+        }
+        if (obj instanceof Object[] array) {
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < array.length; i++) {
+                sb.append(stringify(array[i]));
+                if (i < array.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]");
+            return sb.toString();
+        }
         return obj.toString();
     }
 }
