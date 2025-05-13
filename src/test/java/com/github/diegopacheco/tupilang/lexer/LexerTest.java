@@ -150,4 +150,23 @@ public class LexerTest {
         // we can just verify that it doesn't crash
         // No need for additional assertions
     }
+
+    @Test
+    public void testArrayLiterals() {
+        Lexer lexer = new Lexer("[1, 2, 3]");
+        List<Token> tokens = lexer.scanTokens();
+
+        assertEquals(8, tokens.size()); // 7 tokens plus EOF
+        assertEquals(Token.Type.LEFT_BRACKET, tokens.get(0).type());
+        assertEquals(Token.Type.NUMBER, tokens.get(1).type());
+        assertEquals(1, tokens.get(1).literal());
+        assertEquals(Token.Type.COMMA, tokens.get(2).type());
+        assertEquals(Token.Type.NUMBER, tokens.get(3).type());
+        assertEquals(2, tokens.get(3).literal());
+        assertEquals(Token.Type.COMMA, tokens.get(4).type());
+        assertEquals(Token.Type.NUMBER, tokens.get(5).type());
+        assertEquals(3, tokens.get(5).literal());
+        assertEquals(Token.Type.RIGHT_BRACKET, tokens.get(6).type());
+        assertEquals(Token.Type.EOF, tokens.get(7).type());
+    }
 }
