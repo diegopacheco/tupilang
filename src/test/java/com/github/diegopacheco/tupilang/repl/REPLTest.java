@@ -106,7 +106,7 @@ public class REPLTest {
 
     @Test
     public void testLenStdfunc() throws Exception {
-    String fileContent = Files.readString(Path.of("samples/len.tupi"));
+        String fileContent = Files.readString(Path.of("samples/len.tupi"));
         ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
         System.setIn(testInput);
 
@@ -114,6 +114,19 @@ public class REPLTest {
 
         String output = outputStream.toString();
         assertTrue(output.contains("26"), "Output should contain '26'");
+    }
+
+    @Test
+    public void testArrayTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/array.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("[1, 2, 3, 4, 5]"), "Output should contain the array representation");
+        assertTrue(output.contains("1"), "Output should contain the first element of the array");
     }
 
 }
