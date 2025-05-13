@@ -204,4 +204,40 @@ public class ParserTest {
         assertEquals("add", callExpr.getCallee());
         assertEquals(2, callExpr.getArguments().size());
     }
+
+    @Test
+    public void testParseArrayLiteral() {
+        List<Token> tokens = new ArrayList<>();
+        tokens.add(new Token(Token.Type.LEFT_BRACKET, "[", null, 1));
+        tokens.add(new Token(Token.Type.NUMBER, "1", 1, 1));
+        tokens.add(new Token(Token.Type.COMMA, ",", null, 1));
+        tokens.add(new Token(Token.Type.NUMBER, "2", 2, 1));
+        tokens.add(new Token(Token.Type.COMMA, ",", null, 1));
+        tokens.add(new Token(Token.Type.NUMBER, "3", 3, 1));
+        tokens.add(new Token(Token.Type.RIGHT_BRACKET, "]", null, 1));
+        tokens.add(new Token(Token.Type.SEMICOLON, ";", null, 1));
+        tokens.add(new Token(Token.Type.EOF, "", null, 1));
+
+        Parser parser = new Parser(tokens);
+        List<Stmt> statements = parser.parse();
+
+        assertEquals(1, statements.size());
+        assertTrue(statements.get(0) instanceof ExpressionStatement);
+
+        ExpressionStatement exprStmt = (ExpressionStatement) statements.get(0);
+        assertTrue(exprStmt.getExpression() instanceof ArrayLiteralExpr);
+
+        ArrayLiteralExpr arrayExpr = (ArrayLiteralExpr) exprStmt.getExpression();
+        List<Expr> elements = arrayExpr.getElements();
+
+        assertEquals(3, elements.size());
+        assertTrue(elements.get(0) instanceof LiteralIntExpr);
+        assertEquals(1, ((LiteralIntExpr) elements.get(0)).getValue());
+        assertTrue(elements.get(1) instanceof LiteralIntExpr);
+        assertEquals(2, ((LiteralIntExpr) elements.get(1)).getValue());
+        assertTrue(elements.get(2) instanceof LiteralIntExpr);
+        assertEquals(3, ((LiteralIntExpr) elements.get(2)).getValue());
+
+        assertEquals("[1, 2, 3]", arrayExpr.toString());
+    }
 }
