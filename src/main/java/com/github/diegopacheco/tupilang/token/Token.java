@@ -13,6 +13,7 @@ public class Token {
         EQUAL, EQUAL_EQUAL, EQEQ,
         GREATER, GREATER_EQUAL,
         LESS, LESS_EQUAL,
+        LEFT_BRACKET, RIGHT_BRACKET,
 
         // Literals
         IDENTIFIER, STRING, NUMBER,
