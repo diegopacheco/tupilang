@@ -18,4 +18,17 @@ public class ArrayLiteralExprTest {
         assertEquals("[1, 2, 3]", arrayLiteralExpr.toString());
     }
 
+    @Test
+    public void testArrayLiteralExprEmptyElements() {
+        List<Expr> elements = List.of();
+        ArrayLiteralExpr arrayLiteralExpr = new ArrayLiteralExpr(elements);
+        assertEquals("[]", arrayLiteralExpr.toString());
+    }
+
+    @Test
+    public void testArrayLiteralExprNullElements() {
+        ArrayLiteralExpr arrayLiteralExpr = new ArrayLiteralExpr(null);
+        assertEquals("[]", arrayLiteralExpr.toString());
+    }
+
 }
