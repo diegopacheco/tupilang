@@ -20,6 +20,8 @@ Interesting things here:
 Tupilang binary: jar size it's only **37KB** <br/>
 Created by Diego Pacheco in APRIL/2025.
 
+I wanted a simple version of Scala. But also simple and different. 
+
 ### Build 
 
 ```bash
@@ -124,7 +126,7 @@ test
 
 ### How it works?
 
-<img src="code-structure.png" />
+<img src="tupi-how-it-worrks.png" />
 
 The execution pipeline starts with the REPL, which reads code either typed by the user or from a 
 file, and passes the raw source code to the lexer. The lexer scans the code and produces a 
@@ -133,69 +135,6 @@ which builds an Abstract Syntax Tree (AST) that represents the structural and se
 hierarchy of the program. The AST is handed to the interpreter, which walks through it and
 executes the logic, producing runtime effects like printed output, variable assignments, or 
 function calls.
-
-### Step by Step
-
-#### Step 1: REPL
-Does what?
-The Read-Eval-Print Loop (REPL) reads code from either user input or a file, and initiates the compilation pipeline.
-
-Input:
-* Code typed by the user (interactive mode)
-* Code read from a file (batch mode)
-
-Output:
-* A string of raw source code passed to the Lexer
-
-#### Step 2: Lexer
-Does what?
-The lexer (lexical analyzer) scans the raw source code and breaks it down into a sequence of tokens (smallest meaningful elements).
-
-Input:
-* Raw source code string from the REPL
-
-Output:
-* A list or stream of tokens (e.g., identifiers, keywords, symbols)
-
-#### Step 3: Token
-Does what?
-This represents the token stream. It's a transitional data structure that stores the output of the lexer.
-
-Input:
-* Output of the lexer: a list of tokens
-
-Output:
-* Sent as input to the Parser
-
-#### Step 4: Parser
-Does what?
-The parser analyzes the token stream using grammar rules and builds an Abstract Syntax Tree (AST), representing the structure of the code.
-
-Input:
-* Tokens in form of a list of Statements
-
-Output:
-* An AST (tree representation of code structure)
-
-### Step 5: AST
-Does what?
-The Abstract Syntax Tree is a hierarchical representation of the source code, capturing its structure and semantics.
-
-Input:
-* Built by the parser
-
-Output:
-* Passed to the Interpreter
-
-### Step 6: Interpreter
-Does what?
-The interpreter walks the AST and executes the program according to the rules defined by the language semantics.
-
-Input:
-* AST
-
-Output:
-* The runtime result: printed output, variable assignments, function calls, etc.
 
 ## Note on Visitor Pattern / Experiment
 
@@ -210,7 +149,7 @@ This is the current approach.
 ##### Distribution with Visitor Pattern
 
 The victor pattern helps to add more logic on the AST side of the story.
-However is always the same `acept` method with no much logic. 
+However, is always the same `acept` method with no much logic. 
 The issue IMHO is that the parser flow or options getting hidden across multiple classes
 which IMHO gets harder to understand and even to maintain.
 
