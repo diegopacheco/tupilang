@@ -196,3 +196,9 @@ Input:
 
 Output:
 * The runtime result: printed output, variable assignments, function calls, etc.
+
+## Note on Visitor Pattern / Experiment
+
+The current code is not using Visitor pattern, that's is by design and desire.
+
+
