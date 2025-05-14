@@ -201,4 +201,19 @@ Output:
 
 The current code is not using Visitor pattern, that's is by design and desire.
 
+##### Centralization on Parser
+
+All ASTs are handled from there. Could be all inside `parser` or `interpreter` classes.
+It's keep in there for simplicity and also for debugability and is easier to follow the flow.
+This is the current approach.
+
+##### Distribution with Visitor Pattern
+
+The victor pattern helps to add more logic on the AST side of the story.
+However is always the same `acept` method with no much logic. 
+The issue IMHO is that the parser flow or options getting hidden across multiple classes
+which IMHO gets harder to understand and even to maintain.
+
+
+
 
