@@ -12,7 +12,6 @@ public class Token {
         LEFT_BRACE, RIGHT_BRACE, LBRACE, RBRACE, RBRACKET,
         LEFT_BRACKET, RIGHT_BRACKET,
         COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, COLON,
-        MODULO,  // %
 
         // One or two character tokens
         BANG,              // !
@@ -35,7 +34,13 @@ public class Token {
         INT_TYPE, VOID_TYPE, BOOL_TYPE,
 
         // Control Flow
-        FOR, TO, PLUS_PLUS,
+        FOR, TO,
+        OR,          // ||
+        AND,         // &&
+        PIPE,        // |
+        MODULO,      // %
+        PLUS_PLUS,   // ++
+        MINUS_MINUS, // --
 
         // Special - Error handling
         ERROR, EOF
