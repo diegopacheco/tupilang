@@ -64,11 +64,10 @@ public class Interpreter {
                 }
             }
             return null;
-        }
 
-        else if (stmt instanceof ForStatement forStmt) {
+        } else if (stmt instanceof ForStatement forStmt) {
             if (!forStmt.isTraditional()) {
-                // Range-based for loop
+                // Range-based for loop (working correctly)
                 Object startValue = evaluate(forStmt.getInitializer());
                 Object endValue = evaluate(forStmt.getCondition());
 
@@ -87,13 +86,18 @@ public class Interpreter {
                 }
             } else {
                 // Traditional C-style for loop
-                evaluate(forStmt.getInitializer());  // Evaluate initializer as an expression
+                // Create variable and set its initial value
+                String varName = forStmt.getVarName();
+                Object initialValue = evaluate(forStmt.getInitializer());
+                environment.put(varName, initialValue);
 
+                // Loop condition and body
                 while (isTruthy(evaluate(forStmt.getCondition()))) {
                     for (Stmt bodyStmt : forStmt.getBody()) {
                         execute(bodyStmt);
                     }
-                    evaluate(forStmt.getIncrement());
+                    // Update the variable with the increment expression result
+                    environment.put(varName, evaluate(forStmt.getIncrement()));
                 }
             }
             return null;
@@ -142,6 +146,26 @@ public class Interpreter {
                 throw new RuntimeException("Array index out of bounds: " + index);
             }
             return arrayValue[index];
+
+        } else if (expr instanceof UnaryExpr unary) {
+            Object operand = evaluate(unary.getExpr());
+            String operator = unary.getOperator();
+
+            return switch (operator) {
+                case "++" -> {
+                    if (operand instanceof Integer) {
+                        yield (Integer) operand + 1;
+                    }
+                    throw new RuntimeException("Increment operator requires integer operand");
+                }
+                case "--" -> {
+                    if (operand instanceof Integer) {
+                        yield (Integer) operand - 1;
+                    }
+                    throw new RuntimeException("Decrement operator requires integer operand");
+                }
+                default -> throw new RuntimeException("Unknown unary operator: " + operator);
+            };
         }
         throw new RuntimeException("Unknown expression type: " + expr.getClass().getName());
     }
