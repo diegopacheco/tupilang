@@ -199,4 +199,19 @@ public class REPLTest {
         assertFalse(output.contains("it's odd number"), "Output should not contain 'it's odd number'");
     }
 
+    @Test
+    public void testPlusPlusMinusMinusTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/plus_plus_minus_minus.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("10"), "Output should contain initial value '10'");
+        assertTrue(output.contains("11"), "Output should contain incremented value '11'");
+        assertTrue(output.contains("9"), "Output should contain decremented value '9'");
+        assertTrue(output.contains("9"), "Output should contain decremented value '9'");
+    }
+
 }
