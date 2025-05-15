@@ -12,6 +12,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
+
+    public Main(){}
+
     public static void main(String[] args) {
         if (args.length > 0 && args[0].endsWith(".tupi")) {
             runFile(args[0]);
