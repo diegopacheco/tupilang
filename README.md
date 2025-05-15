@@ -2,6 +2,14 @@
 
 <img src="tupilang-logo.png" />
 
+### Goals
+
+* Have Fun
+* Do something hard
+* Learn something new
+* Create MY simple programming language
+* Be opinionated on what's in scope and out.
+
 ### Rationale
 
 This is a simple POC on how to create a toy programing language.
@@ -51,6 +59,10 @@ Interesting things here:
   * Very Simple Generics
   * Unit Test Framework (inside the box)
   * $(j"") string interpolation to call any java code
+9. Future POC Ideas: Crazy backlog for future:
+  * Write a LSP so can create a VS plugin with proper autocomplete and syntax highlight
+  * Use GraalVM to compile Tupilang to native code, maybe even to WASM
+  * Provide a second runtime, maybe JavaScript but it would need be JVM based so GraalVM.
 
 Tupilang binary: jar size it's only **43KB** <br/>
 Created by Diego Pacheco in APRIL/2025.
