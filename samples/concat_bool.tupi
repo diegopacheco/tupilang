@@ -1,0 +1,5 @@
+def concat(a: bool, b: bool) bool {
+    return a + b;
+}
+print(concat(true, false));
+print(concat(true, true));
