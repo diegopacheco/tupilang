@@ -2,6 +2,10 @@ package com.github.diegopacheco.tupilang.token;
 
 public class Token {
 
+    public Type getType() {
+        return type;
+    }
+
     public enum Type {
         // Single-character tokens
         LEFT_PAREN, RIGHT_PAREN, LPAREN, RPAREN, LBRACKET,
@@ -23,6 +27,9 @@ public class Token {
 
         // Types
         INT_TYPE, VOID_TYPE, BOOL_TYPE,
+
+        // Control Flow
+        FOR, TO, PLUS_PLUS,
 
         ERROR, EOF
     }
