@@ -36,17 +36,21 @@ public class Interpreter {
             }
             environment.put(val.getName(), value);
             return null;
+
         } else if (stmt instanceof ExpressionStatement expr) {
             Object result = evaluate(expr.getExpression());
             if (expr.getExpression() instanceof VariableExpr) {
                 System.out.println(stringify(result));
             }
             return result;
+
         } else if (stmt instanceof FunctionDefinition func) {
             functions.put(func.getName(), func);
             return null;
+
         } else if (stmt instanceof ReturnStatement ret) {
             return evaluate(ret.getExpression());
+
         } else if (stmt instanceof IfStatement ifStmt) {
             Object condition = evaluate(ifStmt.getCondition());
 
@@ -61,68 +65,40 @@ public class Interpreter {
             }
             return null;
         }
-        else if (stmt instanceof ForStatement forStmt) {
-            if (forStmt.isTraditional()) {
-                // Traditional for loop
-                // Initialize variable
-                String varName = forStmt.getVarName();
-                Object initialValue = evaluate(forStmt.getInitializer());
-                environment.put(varName, initialValue);
 
-                // Check condition, execute body, increment, repeat
-                while (isTruthy(evaluate(forStmt.getCondition()))) {
-                    // Execute all statements in the body
+        else if (stmt instanceof ForStatement forStmt) {
+            if (!forStmt.isTraditional()) {
+                // Range-based for loop
+                Object startValue = evaluate(forStmt.getInitializer());
+                Object endValue = evaluate(forStmt.getCondition());
+
+                if (!(startValue instanceof Integer) || !(endValue instanceof Integer)) {
+                    throw new RuntimeException("Range bounds must be integers");
+                }
+
+                int start = (Integer) startValue;
+                int end = (Integer) endValue;
+
+                for (int i = start; i <= end; i++) {
+                    environment.put(forStmt.getVarName(), i);
                     for (Stmt bodyStmt : forStmt.getBody()) {
                         execute(bodyStmt);
-                    }
-
-                    // Apply increment
-                    if (forStmt.getIncrement() instanceof BinaryExpr increment) {
-                        if (increment.getOperator().equals("+")) {
-                            // i++ case
-                            String incrementVarName = ((VariableExpr)increment.getLeft()).getName();
-                            if (incrementVarName.equals(varName)) {
-                                Object currentValue = environment.get(varName);
-                                if (currentValue instanceof Integer) {
-                                    environment.put(varName, (Integer)currentValue + 1);
-                                } else {
-                                    throw new RuntimeException("Can only increment integer variables in for loop");
-                                }
-                            }
-                        } else if (increment.getOperator().equals("=")) {
-                            // i = i + 1 case
-                            String incrementVarName = ((VariableExpr)increment.getLeft()).getName();
-                            if (incrementVarName.equals(varName)) {
-                                environment.put(varName, evaluate(increment.getRight()));
-                            }
-                        }
                     }
                 }
             } else {
-                // Range-based for loop
-                String varName = forStmt.getVarName();
-                Object startObj = evaluate(forStmt.getInitializer());
-                Object endObj = evaluate(forStmt.getCondition());
+                // Traditional C-style for loop
+                evaluate(forStmt.getInitializer());  // Evaluate initializer as an expression
 
-                if (!(startObj instanceof Integer) || !(endObj instanceof Integer)) {
-                    throw new RuntimeException("Range-based for loop requires integer bounds");
-                }
-
-                int start = (Integer)startObj;
-                int end = (Integer)endObj;
-
-                for (int i = start; i <= end; i++) {
-                    // Set loop variable
-                    environment.put(varName, i);
-
-                    // Execute all statements in the body
+                while (isTruthy(evaluate(forStmt.getCondition()))) {
                     for (Stmt bodyStmt : forStmt.getBody()) {
                         execute(bodyStmt);
                     }
+                    evaluate(forStmt.getIncrement());
                 }
             }
             return null;
         }
+
         throw new RuntimeException("Unknown statement type: " + stmt.getClass().getName());
     }
 
@@ -212,6 +188,55 @@ public class Interpreter {
             }
             case "==" -> {
                 return Objects.equals(left, right);
+            }
+            case "||" -> {
+                if (left instanceof Boolean && right instanceof Boolean) {
+                    return (Boolean) left || (Boolean) right;
+                }
+                throw new RuntimeException("Operands of '||' must be booleans");
+            }
+            case "&&" -> {
+                if (left instanceof Boolean && right instanceof Boolean) {
+                    return (Boolean) left && (Boolean) right;
+                }
+                throw new RuntimeException("Operands of '&&' must be booleans");
+            }
+            case "++" -> {
+                if (left instanceof Integer) {
+                    return (Integer) left + 1;
+                }
+            }
+            case "--" -> {
+                if (left instanceof Integer) {
+                    return (Integer) left - 1;
+                }
+            }
+            case "<" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left < (Integer) right;
+                }
+                throw new RuntimeException("Operands of '<' must be integers");
+            }
+            case ">" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left > (Integer) right;
+                }
+                throw new RuntimeException("Operands of '>' must be integers");
+            }
+            case "<=" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left <= (Integer) right;
+                }
+                throw new RuntimeException("Operands of '<=' must be integers");
+            }
+            case ">=" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left >= (Integer) right;
+                }
+                throw new RuntimeException("Operands of '>=' must be integers");
+            }
+            case "!=" -> {
+                return !Objects.equals(left, right);
             }
         }
         throw new RuntimeException("Unsupported operation: " + expr.getOperator());
