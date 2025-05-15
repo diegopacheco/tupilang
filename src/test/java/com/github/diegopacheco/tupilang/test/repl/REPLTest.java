@@ -165,10 +165,25 @@ public class REPLTest {
         REPL.run(new String[]{});
 
         String output = outputStream.toString();
+
+        // Modern Range-based for loop
         assertTrue(output.contains("Even number: 0"), "Output should contain 'Even number: 0'");
         assertTrue(output.contains("Odd number: 1"), "Output should contain 'Odd number: 1'");
-        assertTrue(output.contains("Number: 0"), "Output should contain 'Number: 0'");
-        assertTrue(output.contains("Number: 9"), "Output should contain 'Number: 9'");
+        assertTrue(output.contains("Even number: 2"), "Output should contain 'Even number: 2'");
+        assertTrue(output.contains("Odd number: 3"), "Output should contain 'Odd number: 3'");
+        assertTrue(output.contains("Even number: 4"), "Output should contain 'Even number: 4'");
+        assertTrue(output.contains("Odd number: 5"), "Output should contain 'Odd number: 5'");
+        assertTrue(output.contains("Even number: 6"), "Output should contain 'Even number: 6'");
+        assertTrue(output.contains("Odd number: 7"), "Output should contain 'Odd number: 7'");
+        assertTrue(output.contains("Even number: 8"), "Output should contain 'Even number: 8'");
+        assertTrue(output.contains("Odd number: 9"), "Output should contain 'Odd number: 9'");
+        assertTrue(output.contains("Even number: 10"), "Output should contain 'Even number: 10'");
+
+        // Classical traditional C-Style for loop
+        assertTrue(output.contains("Number j: 0"), "Output should contain 'Number j: 0'");
+        assertTrue(output.contains("Number j: 1"), "Output should contain 'Number j: 1'");
+        assertTrue(output.contains("Number j: 2"), "Output should contain 'Number j: 2'");
+        assertTrue(output.contains("Number j: 3"), "Output should contain 'Number j: 3'");
     }
 
 }
