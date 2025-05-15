@@ -15,15 +15,25 @@ Interesting things here:
    * Proper help function
    * CTRL + D to exit or type `exit;`
    * Can run samples in `samples` folder just type `run`
-   * `time` function to trace eecution time (ms)
+   * `time` function to trace execution time (ms)
 6. Tupilang So far supports:
- * Types: int, string, void, bool, array
+ * Types: Int, String, Void, Bool, array represented by []
  * Keywords: if, return
  * Create functions with def, comments with //
- * String concatenation, bool concatenation
+ * String concatenation, Bool concatenation
  * Built-in functions: print, len
+ * Val is immutable by default if want mutate keep using val
+ * Val automatically detect types.
+7. Removed by Design: 
+  * No Enums
+  * No Abstract classes
+  * No Aspects
+  * No Switch
+  * No While
+  * No Recursion
+  * No Annoations 
 
-Tupilang binary: jar size it's only **36KB** <br/>
+Tupilang binary: jar size it's only **39KB** <br/>
 Created by Diego Pacheco in APRIL/2025.
 
 I wanted a simple version of Scala. But also simple and different. 
@@ -64,7 +74,7 @@ I wanted a simple version of Scala. But also simple and different.
 :> val xxx = "test";
 :> print(xxx);
 test
-:> def sum(a:Int, b:Int) int {
+:> def sum(a:Int, b:Int) Int {
   return a + b;
 }... ...
 :> print(sum(100,200));
