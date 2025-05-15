@@ -1,0 +1,7 @@
+def getName() String {
+    return "Tupi " + " Lang";
+}
+
+val x = "Diego " + "Pacheco";
+print(x);
+print(getName());
