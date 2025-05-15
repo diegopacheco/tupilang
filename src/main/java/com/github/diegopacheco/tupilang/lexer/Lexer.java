@@ -73,7 +73,14 @@ public class Lexer {
                 }
                 break;
             case '*': addToken(Token.Type.STAR); break;
-            case '-': addToken(Token.Type.MINUS); break;
+            case '-':
+                if (peek() == '-') {
+                    advance();
+                    addToken(Token.Type.MINUS_MINUS);
+                } else {
+                    addToken(Token.Type.MINUS);
+                }
+                break;
             case ';': addToken(Token.Type.SEMICOLON); break;
             case ':': addToken(Token.Type.COLON); break;
             case '<':
