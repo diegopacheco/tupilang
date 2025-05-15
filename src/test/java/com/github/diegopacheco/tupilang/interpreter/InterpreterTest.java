@@ -279,4 +279,56 @@ public class InterpreterTest {
         interpreter.interpret(program);
         assertEquals("14", outputStream.toString().trim());
     }
+
+    @Test
+    public void testBooleanAddition() {
+        // Test for:
+        // def concat(a: bool, b: bool) bool {
+        //     return a + b;
+        // }
+        // print(concat(true, false));
+        // print(concat(true, true));
+
+        List<Stmt> program = new ArrayList<>();
+        List<Param> params = Arrays.asList(
+                new Param("a", "bool"),
+                new Param("b", "bool")
+        );
+
+        List<Stmt> body = Collections.singletonList(
+                new ReturnStatement(new BinaryExpr(
+                        new VariableExpr("a"),
+                        "+",
+                        new VariableExpr("b")
+                ))
+        );
+
+        program.add(new FunctionDefinition("concat", params, "bool", body));
+
+        List<Expr> args1 = Arrays.asList(
+                new LiteralBoolExpr(true),
+                new LiteralBoolExpr(false)
+        );
+        program.add(new ExpressionStatement(new CallExpr("print", List.of(
+                new CallExpr("concat", args1)
+        ))));
+
+        List<Expr> args2 = Arrays.asList(
+                new LiteralBoolExpr(true),
+                new LiteralBoolExpr(true)
+        );
+        program.add(new ExpressionStatement(new CallExpr("print", List.of(
+                new CallExpr("concat", args2)
+        ))));
+
+        interpreter.interpret(program);
+
+        String output = outputStream.toString().trim();
+        assertTrue(output.contains("true"));
+        assertTrue(output.contains("false"));
+
+        String[] lines = output.split("\\R");
+        assertEquals("true", lines[0]);
+        assertEquals("false", lines[1]);
+    }
 }
