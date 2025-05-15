@@ -129,4 +129,30 @@ public class REPLTest {
         assertTrue(output.contains("1"), "Output should contain the first element of the array");
     }
 
+    @Test
+    public void testStringInterpolationTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/string_interpolation.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Diego Pacheco"), "Output should contain 'Diego Pacheco'");
+        assertTrue(output.contains("Tupi  Lang"), "Output should contain 'Tupi  Lang'");
+    }
+
+    @Test
+    public void testBoolConcatTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/concat_bool.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("true"), "Output should contain 'true'");
+        assertTrue(output.contains("false"), "Output should contain 'false'");
+    }
+
 }
