@@ -200,6 +200,7 @@ public class Parser {
                 }
 
                 return new ForStatement(varName, start, end, statements);
+
             } else if (match(Token.Type.EQUAL)) {
                 // Traditional C-style for loop: for (Int i=0; i<10; i++)
                 Expr initializer = parseExpression();
@@ -208,7 +209,16 @@ public class Parser {
                 Expr condition = parseExpression();
                 consume(Token.Type.SEMICOLON, "Expected ';' after for loop condition");
 
-                Expr increment = parseExpression();
+                // Handle both variable++ and more complex increments
+                Expr increment;
+                if (check(Token.Type.IDENTIFIER) && peekNext().type == Token.Type.PLUS_PLUS) {
+                    varName = consume(Token.Type.IDENTIFIER, "Expected identifier").text;
+                    consume(Token.Type.PLUS_PLUS, "Expected '++'");
+                    increment = new UnaryExpr("++", new VariableExpr(varName), true);
+                } else {
+                    increment = parseExpression();
+                }
+
                 consume(Token.Type.RPAREN, "Expected ')' after for loop increment");
 
                 Stmt body = parseBlock();
@@ -220,12 +230,13 @@ public class Parser {
                 }
 
                 return new ForStatement(varName, initializer, condition, increment, statements);
-            } else {
+            }
+            else {
                 throw new RuntimeException("Expected ':' or '=' after variable name in for loop");
             }
-        } else {
-            throw new RuntimeException("Expected 'Int' as for loop variable type");
         }
+
+        throw new RuntimeException("Invalid for loop syntax");
     }
 
     private Stmt parseBlock() {
@@ -241,12 +252,21 @@ public class Parser {
     }
 
     private Expr parseExpression() {
+        Expr expr = parseAssignment();
 
-        return parseAssignment();
+        // Handle post-increment/post-decrement
+        if (match(Token.Type.PLUS_PLUS)) {
+            if (expr instanceof VariableExpr) {
+                String name = ((VariableExpr)expr).getName();
+                return new UnaryExpr("++", expr, true); // true indicates postfix
+            }
+            throw new RuntimeException("Invalid increment target");
+        }
+        return expr;
     }
 
     private Expr parseAssignment() {
-        Expr expr = parseEquality();
+        Expr expr = parseOr();
         if (match(Token.Type.EQUAL)) {
             Expr value = parseAssignment();
             if (expr instanceof VariableExpr) {
@@ -255,6 +275,26 @@ public class Parser {
             }
 
             throw new RuntimeException("Invalid assignment target");
+        }
+        return expr;
+    }
+
+    private Expr parseOr() {
+        Expr expr = parseAnd();
+        while (match(Token.Type.OR)) {
+            String operator = previous().text;
+            Expr right = parseAnd();
+            expr = new BinaryExpr(expr, operator, right);
+        }
+        return expr;
+    }
+
+    private Expr parseAnd() {
+        Expr expr = parseEquality();
+        while (match(Token.Type.AND)) {
+            String operator = previous().text;
+            Expr right = parseEquality();
+            expr = new BinaryExpr(expr, operator, right);
         }
         return expr;
     }
@@ -294,13 +334,11 @@ public class Parser {
 
     private Expr parseMultiplication() {
         Expr expr = parsePrimary();
-
-        while (match(Token.Type.STAR, Token.Type.SLASH)) {
+        while (match(Token.Type.STAR, Token.Type.SLASH, Token.Type.MODULO)) {
             String op = previous().text;
             Expr right = parsePrimary();
             expr = new BinaryExpr(expr, op, right);
         }
-
         return expr;
     }
 
@@ -419,5 +457,10 @@ public class Parser {
     private Token advance() {
         if (!isAtEnd()) pos++;
         return previous();
+    }
+
+    private Token peekNext() {
+        if (pos + 1 >= tokens.size()) return tokens.get(tokens.size() - 1);
+        return tokens.get(pos + 1);
     }
 }
