@@ -2,7 +2,6 @@ package com.github.diegopacheco.tupilang.parser;
 
 import com.github.diegopacheco.tupilang.ast.*;
 import com.github.diegopacheco.tupilang.token.Token;
-
 import java.util.*;
 
 public class Parser {
@@ -60,6 +59,67 @@ public class Parser {
             return new ValDeclaration(name, expr);
         }
 
+        if (match(Token.Type.FOR)) {
+            return parseForStatement();
+        }
+
+        if (match(Token.Type.DEF)) {
+            String name = consume(Token.Type.IDENTIFIER, "Expected function name").text;
+            consume(Token.Type.LPAREN, "Expected '('");
+
+            List<Param> params = new ArrayList<>();
+            if (!check(Token.Type.RPAREN)) {
+                do {
+                    String paramName = consume(Token.Type.IDENTIFIER, "Expected param name").text;
+                    consume(Token.Type.COLON, "Expected ':'");
+                    // Parse parameter type
+                    String type;
+                    if (match(Token.Type.INT_TYPE)) {
+                        type = "Int";
+                    } else if (match(Token.Type.BOOL_TYPE)) {
+                        type = "Bool";
+                    } else if (match(Token.Type.VOID_TYPE)) {
+                        type = "Void";
+                    } else if (match(Token.Type.STRING)) {
+                        type = "String";
+                    } else if (match(Token.Type.IDENTIFIER)) {
+                        type = previous().text;
+                    } else {
+                        throw new RuntimeException("Expected type");
+                    }
+
+                    params.add(new Param(paramName, type));
+                } while (match(Token.Type.COMMA));
+            }
+
+            consume(Token.Type.RPAREN, "Expected ')'");
+
+            String returnType;
+            if (match(Token.Type.VOID_TYPE)) {
+                returnType = "Void";
+            } else if (match(Token.Type.INT_TYPE)) {
+                returnType = "Int";
+            } else if (match(Token.Type.BOOL_TYPE)) {
+                returnType = "Bool";
+            } else if (match(Token.Type.STRING)) {
+                returnType = "String";
+            } else if (match(Token.Type.IDENTIFIER)) {
+                returnType = previous().text;
+            } else {
+                throw new RuntimeException("Expected return type");
+            }
+
+            consume(Token.Type.LBRACE, "Expected '{'");
+
+            List<Stmt> body = new ArrayList<>();
+            while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+                body.add(parseStatement());
+            }
+
+            consume(Token.Type.RBRACE, "Expected '}'");
+            return new FunctionDefinition(name, params, returnType, body);
+        }
+
         if (match(Token.Type.IF)) {
             consume(Token.Type.LPAREN, "Expected '('");
             Expr condition = parseExpression();
@@ -106,59 +166,6 @@ public class Parser {
             return new ExpressionStatement(new CallExpr("print", arguments));
         }
 
-        if (match(Token.Type.DEF)) {
-            String name = consume(Token.Type.IDENTIFIER, "Expected function name").text;
-            consume(Token.Type.LPAREN, "Expected '('");
-
-            List<Param> params = new ArrayList<>();
-            if (!check(Token.Type.RPAREN)) {
-                do {
-                    String paramName = consume(Token.Type.IDENTIFIER, "Expected param name").text;
-                    consume(Token.Type.COLON, "Expected ':'");
-
-                    // Parse parameter type - support multiple types
-                    String type;
-                    if (match(Token.Type.INT_TYPE)) {
-                        type = "Int";
-                    } else if (match(Token.Type.BOOL_TYPE)) {
-                        type = "bool";
-                    } else if (match(Token.Type.IDENTIFIER)) {
-                        type = previous().text;
-                    } else {
-                        throw new RuntimeException("Expected type");
-                    }
-
-                    params.add(new Param(paramName, type));
-                } while (match(Token.Type.COMMA));
-            }
-
-            consume(Token.Type.RPAREN, "Expected ')'");
-
-            // Parse return type - support multiple types
-            String returnType;
-            if (match(Token.Type.VOID_TYPE)) {
-                returnType = "void";
-            } else if (match(Token.Type.INT_TYPE)) {
-                returnType = "Int";
-            } else if (match(Token.Type.BOOL_TYPE)) {
-                returnType = "bool";
-            } else if (match(Token.Type.IDENTIFIER)) {
-                returnType = previous().text;
-            } else {
-                throw new RuntimeException("Expected return type");
-            }
-
-            consume(Token.Type.LBRACE, "Expected '{'");
-
-            List<Stmt> body = new ArrayList<>();
-            while (!check(Token.Type.RBRACE) && !isAtEnd()) {
-                body.add(parseStatement());
-            }
-
-            consume(Token.Type.RBRACE, "Expected '}'");
-            return new FunctionDefinition(name, params, returnType, body);
-        }
-
         if (match(Token.Type.RETURN)) {
             Expr expr = parseExpression();
             consume(Token.Type.SEMICOLON, "Expected ';'");
@@ -169,6 +176,87 @@ public class Parser {
         Expr expr = parseExpression();
         consume(Token.Type.SEMICOLON, "Expected ';' after expression");
         return new ExpressionStatement(expr);
+    }
+
+    private Stmt parseForStatement() {
+        consume(Token.Type.LPAREN, "Expected '(' after 'for'");
+
+        // Check for range-based for loop: for (int i : 1 to 10) {...}
+        if (match(Token.Type.INT_TYPE)) {
+            String varName = consume(Token.Type.IDENTIFIER, "Expected variable name after 'int'").text;
+
+            if (match(Token.Type.COLON)) {
+                // Range-based for loop
+                Expr start = parseExpression();
+                consume(Token.Type.TO, "Expected 'to' in range-based for loop"); // You'll need to add TO token type
+                Expr end = parseExpression();
+                consume(Token.Type.RPAREN, "Expected ')' after for loop condition");
+
+                // Parse body
+                List<Stmt> body = new ArrayList<>();
+                if (match(Token.Type.LBRACE)) {
+                    while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+                        body.add(parseStatement());
+                    }
+                    consume(Token.Type.RBRACE, "Expected '}' after for loop body");
+                } else {
+                    body.add(parseStatement());
+                }
+
+                return new ForStatement(varName, start, end, body);
+            } else {
+                // Traditional for loop
+                consume(Token.Type.EQUAL, "Expected '=' after variable name in for loop");
+                Expr initializer = parseExpression();
+                consume(Token.Type.SEMICOLON, "Expected ';' after for loop initializer");
+
+                Expr condition = parseExpression();
+                consume(Token.Type.SEMICOLON, "Expected ';' after for loop condition");
+
+                Expr increment;
+                // Parse increment expression (could be i++ or i=i+1)
+                if (match(Token.Type.IDENTIFIER)) {
+                    String incrementVarName = previous().text;
+                    if (match(Token.Type.PLUS_PLUS)) {
+                        // i++
+                        increment = new BinaryExpr(
+                                new VariableExpr(incrementVarName),
+                                "+",
+                                new LiteralIntExpr(1)
+                        );
+                    } else if (match(Token.Type.EQUAL)) {
+                        // i = something
+                        Expr right = parseExpression();
+                        increment = new BinaryExpr(
+                                new VariableExpr(incrementVarName),
+                                "=",
+                                right
+                        );
+                    } else {
+                        throw new RuntimeException("Expected increment expression in for loop");
+                    }
+                } else {
+                    throw new RuntimeException("Expected increment expression in for loop");
+                }
+
+                consume(Token.Type.RPAREN, "Expected ')' after for loop increment");
+
+                // Parse body
+                List<Stmt> body = new ArrayList<>();
+                if (match(Token.Type.LBRACE)) {
+                    while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+                        body.add(parseStatement());
+                    }
+                    consume(Token.Type.RBRACE, "Expected '}' after for loop body");
+                } else {
+                    body.add(parseStatement());
+                }
+
+                return new ForStatement(varName, initializer, condition, increment, body);
+            }
+        } else {
+            throw new RuntimeException("Expected 'int' as for loop variable type");
+        }
     }
 
     private Expr parseExpression() {
