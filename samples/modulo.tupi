@@ -1,0 +1,5 @@
+if (2 % 2 == 0) {
+  print("it's even number");
+} else {
+  print("it's odd number");
+}
