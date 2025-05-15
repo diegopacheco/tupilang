@@ -139,7 +139,7 @@ public class REPLTest {
 
         String output = outputStream.toString();
         assertTrue(output.contains("Diego Pacheco"), "Output should contain 'Diego Pacheco'");
-        assertTrue(output.contains("Tupi  Lang"), "Output should contain 'Tupi  Lang'");
+        assertTrue(output.contains("Tupi Lang"), "Output should contain 'Tupi  Lang'");
     }
 
     @Test
