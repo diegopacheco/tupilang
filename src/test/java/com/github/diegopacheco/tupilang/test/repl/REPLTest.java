@@ -186,4 +186,17 @@ public class REPLTest {
         assertTrue(output.contains("Number j: 3"), "Output should contain 'Number j: 3'");
     }
 
+    @Test
+    public void testModuloTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/modulo.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("it's even number"), "Output should contain 'it's even number'");
+        assertFalse(output.contains("it's odd number"), "Output should not contain 'it's odd number'");
+    }
+
 }
