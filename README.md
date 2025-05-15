@@ -32,7 +32,17 @@ Interesting things here:
   * No Switch
   * No While
   * No Recursion
+  * No Reflection
   * No Annoations 
+  * No Macros
+8. PENDING - Might add in the future (TBD): 
+  * Collections: Map
+  * Pattern matching
+  * Traits
+  * More built-in functions: map, filter, reduce, etc.
+  * Classes (with no setters/getters, no inheritance)
+  * Very Simple Generics
+  * $(j"") string interpolation to call any java code
 
 Tupilang binary: jar size it's only **39KB** <br/>
 Created by Diego Pacheco in APRIL/2025.
