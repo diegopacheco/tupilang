@@ -10,14 +10,20 @@ public class Token {
         // Single-character tokens
         LEFT_PAREN, RIGHT_PAREN, LPAREN, RPAREN, LBRACKET,
         LEFT_BRACE, RIGHT_BRACE, LBRACE, RBRACE, RBRACKET,
+        LEFT_BRACKET, RIGHT_BRACKET,
         COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, COLON,
+        MODULO,  // %
 
         // One or two character tokens
-        BANG, BANG_EQUAL,
-        EQUAL, EQUAL_EQUAL, EQEQ,
-        GREATER, GREATER_EQUAL,
-        LESS, LESS_EQUAL,
-        LEFT_BRACKET, RIGHT_BRACKET,
+        BANG,              // !
+        BANG_EQUAL,        // !=
+        EQUAL,EQUAL_EQUAL, // ==
+        LESS,              // <
+        LESS_EQUAL,        // <=
+        GREATER,           // >
+        GREATER_EQUAL,     // >=
+        EQEQ,              // ==
+        NOT_EQUAL,         // !=
 
         // Literals
         IDENTIFIER, STRING, NUMBER,
@@ -31,6 +37,7 @@ public class Token {
         // Control Flow
         FOR, TO, PLUS_PLUS,
 
+        // Special - Error handling
         ERROR, EOF
     }
 
