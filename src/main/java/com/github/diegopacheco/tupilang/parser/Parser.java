@@ -181,97 +181,102 @@ public class Parser {
     private Stmt parseForStatement() {
         consume(Token.Type.LPAREN, "Expected '(' after 'for'");
 
-        // Check for range-based for loop: for (int i : 1 to 10) {...}
         if (match(Token.Type.INT_TYPE)) {
-            String varName = consume(Token.Type.IDENTIFIER, "Expected variable name after 'int'").text;
+            String varName = consume(Token.Type.IDENTIFIER, "Expected variable name after 'Int'").text;
 
             if (match(Token.Type.COLON)) {
-                // Range-based for loop
+                // Range-based for loop: for (Int i: 0 to 10)
                 Expr start = parseExpression();
-                consume(Token.Type.TO, "Expected 'to' in range-based for loop"); // You'll need to add TO token type
+                consume(Token.Type.TO, "Expected 'to' in range-based for loop");
                 Expr end = parseExpression();
                 consume(Token.Type.RPAREN, "Expected ')' after for loop condition");
 
-                // Parse body
-                List<Stmt> body = new ArrayList<>();
-                if (match(Token.Type.LBRACE)) {
-                    while (!check(Token.Type.RBRACE) && !isAtEnd()) {
-                        body.add(parseStatement());
-                    }
-                    consume(Token.Type.RBRACE, "Expected '}' after for loop body");
+                Stmt body = parseBlock();
+                List<Stmt> statements = new ArrayList<>();
+                if (body instanceof BlockStmt) {
+                    statements = ((BlockStmt) body).getStatements();
                 } else {
-                    body.add(parseStatement());
+                    statements.add(body);
                 }
 
-                return new ForStatement(varName, start, end, body);
-            } else {
-                // Traditional for loop
-                consume(Token.Type.EQUAL, "Expected '=' after variable name in for loop");
+                return new ForStatement(varName, start, end, statements);
+            } else if (match(Token.Type.EQUAL)) {
+                // Traditional C-style for loop: for (Int i=0; i<10; i++)
                 Expr initializer = parseExpression();
                 consume(Token.Type.SEMICOLON, "Expected ';' after for loop initializer");
 
                 Expr condition = parseExpression();
                 consume(Token.Type.SEMICOLON, "Expected ';' after for loop condition");
 
-                Expr increment;
-                // Parse increment expression (could be i++ or i=i+1)
-                if (match(Token.Type.IDENTIFIER)) {
-                    String incrementVarName = previous().text;
-                    if (match(Token.Type.PLUS_PLUS)) {
-                        // i++
-                        increment = new BinaryExpr(
-                                new VariableExpr(incrementVarName),
-                                "+",
-                                new LiteralIntExpr(1)
-                        );
-                    } else if (match(Token.Type.EQUAL)) {
-                        // i = something
-                        Expr right = parseExpression();
-                        increment = new BinaryExpr(
-                                new VariableExpr(incrementVarName),
-                                "=",
-                                right
-                        );
-                    } else {
-                        throw new RuntimeException("Expected increment expression in for loop");
-                    }
-                } else {
-                    throw new RuntimeException("Expected increment expression in for loop");
-                }
-
+                Expr increment = parseExpression();
                 consume(Token.Type.RPAREN, "Expected ')' after for loop increment");
 
-                // Parse body
-                List<Stmt> body = new ArrayList<>();
-                if (match(Token.Type.LBRACE)) {
-                    while (!check(Token.Type.RBRACE) && !isAtEnd()) {
-                        body.add(parseStatement());
-                    }
-                    consume(Token.Type.RBRACE, "Expected '}' after for loop body");
+                Stmt body = parseBlock();
+                List<Stmt> statements = new ArrayList<>();
+                if (body instanceof BlockStmt) {
+                    statements = ((BlockStmt) body).getStatements();
                 } else {
-                    body.add(parseStatement());
+                    statements.add(body);
                 }
 
-                return new ForStatement(varName, initializer, condition, increment, body);
+                return new ForStatement(varName, initializer, condition, increment, statements);
+            } else {
+                throw new RuntimeException("Expected ':' or '=' after variable name in for loop");
             }
         } else {
-            throw new RuntimeException("Expected 'int' as for loop variable type");
+            throw new RuntimeException("Expected 'Int' as for loop variable type");
         }
+    }
+
+    private Stmt parseBlock() {
+        List<Stmt> statements = new ArrayList<>();
+        consume(Token.Type.LBRACE, "Expected '{' before block");
+
+        while (!check(Token.Type.RBRACE) && !isAtEnd()) {
+            statements.add(parseStatement());
+        }
+
+        consume(Token.Type.RBRACE, "Expected '}' after block");
+        return new BlockStmt(statements);
     }
 
     private Expr parseExpression() {
-        return parseEquality();
+
+        return parseAssignment();
+    }
+
+    private Expr parseAssignment() {
+        Expr expr = parseEquality();
+        if (match(Token.Type.EQUAL)) {
+            Expr value = parseAssignment();
+            if (expr instanceof VariableExpr) {
+                String name = ((VariableExpr)expr).getName(); // Use getter instead of direct access
+                return new AssignExpr(name, value);
+            }
+
+            throw new RuntimeException("Invalid assignment target");
+        }
+        return expr;
     }
 
     private Expr parseEquality() {
-        Expr expr = parseAddition();
-
-        if (match(Token.Type.EQEQ)) {
-            String op = previous().text;
-            Expr right = parseAddition();
-            expr = new BinaryExpr(expr, op, right);
+        Expr expr = parseComparison();
+        while (match(Token.Type.EQEQ, Token.Type.NOT_EQUAL)) {
+            String operator = previous().text;
+            Expr right = parseComparison();
+            expr = new BinaryExpr(expr, operator, right);
         }
+        return expr;
+    }
 
+    private Expr parseComparison() {
+        Expr expr = parseAddition();
+        while (match(Token.Type.LESS, Token.Type.LESS_EQUAL,
+                Token.Type.GREATER, Token.Type.GREATER_EQUAL)) {
+            String operator = previous().text;
+            Expr right = parseAddition();
+            expr = new BinaryExpr(expr, operator, right);
+        }
         return expr;
     }
 
