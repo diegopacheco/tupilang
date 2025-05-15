@@ -10,6 +10,8 @@ Interesting things here:
 2. No libraries, No external dependencies
 3. Heavily inspired by Scala 3
 4. However, much more simple
+5. It's Interpreted but does not use Reflections under the hood
+6. The codebase is very minimalist and simple
 5. REPL
    * Type code and run on the fly
    * Proper help function
@@ -49,7 +51,7 @@ Interesting things here:
   * Unit Test Framework (inside the box)
   * $(j"") string interpolation to call any java code
 
-Tupilang binary: jar size it's only **39KB** <br/>
+Tupilang binary: jar size it's only **43KB** <br/>
 Created by Diego Pacheco in APRIL/2025.
 
 I wanted a simple version of Scala. But also simple and different. 
@@ -212,6 +214,12 @@ The victor pattern helps to add more logic on the AST side of the story.
 However, is always the same `acept` method with no much logic. 
 The issue IMHO is that the parser flow or options getting hidden across multiple classes
 which IMHO gets harder to understand and even to maintain.
+
+### Why not better REPL autocomplete
+
+Java sucks for that. The best option is use JLine. Java does not capture a key stroke on terminal, we need press enter. 
+So this kill any code decent terminal ux completion. However, IF I do use JLine that would work but I will break the promise on ZERO LIBS.
+Sure the core lang it would still have zero libs and deps and this it would be on the tooling, but not no libs.
 
 ### Disclaimers
 
