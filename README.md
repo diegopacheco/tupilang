@@ -36,6 +36,9 @@ Interesting things here:
   * No Reflection
   * No Annotations 
   * No Macros
+  * No Implicits
+  * No Scala Object
+  * No Package Object
 8. PENDING - Might add in the future (TBD): 
   * Collections: Map
   * Pattern matching
@@ -43,6 +46,7 @@ Interesting things here:
   * More built-in functions: map, filter, reduce, etc.
   * Classes (with no setters/getters, no inheritance)
   * Very Simple Generics
+  * Unit Test Framework (inside the box)
   * $(j"") string interpolation to call any java code
 
 Tupilang binary: jar size it's only **39KB** <br/>
