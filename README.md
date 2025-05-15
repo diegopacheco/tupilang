@@ -19,11 +19,12 @@ Interesting things here:
 6. Tupilang So far supports:
  * Types: Int, String, Void, Bool, array represented by []
  * Keywords: if, return
+ * Flow Control: Range For and C-Style For
  * Operators: +, -, *, /, %, ==, !=, <, >, <=, >=, % (modulo)
  * Create functions with def, comments with //
  * String concatenation, Bool concatenation
  * Built-in functions: print, len
- * Val is immutable by default if want mutate keep using val
+ * Val is immutable by default if want to mutate keep using val
  * Val automatically detect types.
 7. Removed by Design: 
   * No Enums
@@ -33,7 +34,7 @@ Interesting things here:
   * No While
   * No Recursion
   * No Reflection
-  * No Annoations 
+  * No Annotations 
   * No Macros
 8. PENDING - Might add in the future (TBD): 
   * Collections: Map
@@ -208,6 +209,11 @@ However, is always the same `acept` method with no much logic.
 The issue IMHO is that the parser flow or options getting hidden across multiple classes
 which IMHO gets harder to understand and even to maintain.
 
+### Disclaimers
 
+1. This is a POC language, not a production ready language.
+2. Inspired by https://github.com/diegopacheco/writing-interpreter-in-go
+3. No Vibe Coding was used at all, but using IntelliJ with Copilot/Sonnet-3.7.
+4. It's easy to find bugs, every single thing need to be tested.
 
 
