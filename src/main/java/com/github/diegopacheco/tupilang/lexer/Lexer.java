@@ -1,4 +1,5 @@
 package com.github.diegopacheco.tupilang.lexer;
+
 import com.github.diegopacheco.tupilang.token.Token;
 import java.util.*;
 
@@ -61,10 +62,22 @@ public class Lexer {
                     addToken(Token.Type.PLUS);
                 }
                 break;
+            case '%':
+                addToken(Token.Type.MODULO);
+                break;
             case '*': addToken(Token.Type.STAR); break;
             case '-': addToken(Token.Type.MINUS); break;
             case ';': addToken(Token.Type.SEMICOLON); break;
             case ':': addToken(Token.Type.COLON); break;
+            case '<':
+                addToken(match('=') ? Token.Type.LESS_EQUAL : Token.Type.LESS);
+                break;
+            case '>':
+                addToken(match('=') ? Token.Type.GREATER_EQUAL : Token.Type.GREATER);
+                break;
+            case '!':
+                addToken(match('=') ? Token.Type.NOT_EQUAL : Token.Type.BANG);
+                break;
             case '/':
                 if (match('/')) {
                     // Comment goes until the end of the line
