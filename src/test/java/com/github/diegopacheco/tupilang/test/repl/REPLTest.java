@@ -156,4 +156,19 @@ public class REPLTest {
         assertTrue(output.contains("false"), "Output should contain 'false'");
     }
 
+    @Test
+    public void testControlFlowForTupiFile() throws Exception {
+        String fileContent = Files.readString(Path.of("samples/control_flow_for.tupi"));
+        ByteArrayInputStream testInput = new ByteArrayInputStream((fileContent + "\nexit;\n").getBytes());
+        System.setIn(testInput);
+
+        REPL.run(new String[]{});
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Even number: 0"), "Output should contain 'Even number: 0'");
+        assertTrue(output.contains("Odd number: 1"), "Output should contain 'Odd number: 1'");
+        assertTrue(output.contains("Number: 0"), "Output should contain 'Number: 0'");
+        assertTrue(output.contains("Number: 9"), "Output should contain 'Number: 9'");
+    }
+
 }
