@@ -118,7 +118,19 @@ public class Interpreter {
                     return (Integer) left + (Integer) right;
                 }
                 if (left instanceof String || right instanceof String) {
-                    return left.toString() + right.toString();
+                    String leftStr = left.toString();
+                    String rightStr = right.toString();
+
+                    if (leftStr.startsWith("\"") && leftStr.endsWith("\"")) {
+                        leftStr = leftStr.substring(1, leftStr.length() - 1);
+                    }
+                    if (rightStr.startsWith("\"") && rightStr.endsWith("\"")) {
+                        rightStr = rightStr.substring(1, rightStr.length() - 1);
+                    }
+                    return leftStr + rightStr;
+                }
+                if (left instanceof Boolean && right instanceof Boolean) {
+                    return (Boolean) left ^ (Boolean) right;
                 }
             }
             case "-" -> {
