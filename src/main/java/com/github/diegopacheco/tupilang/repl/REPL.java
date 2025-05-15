@@ -11,6 +11,9 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class REPL {
+
+    private REPL() {}
+
     public static void run(String[] args) {
         printLogo();
 
