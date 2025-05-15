@@ -255,12 +255,12 @@ public class Parser {
         Expr expr = parseAssignment();
 
         // Handle post-increment/post-decrement
-        if (match(Token.Type.PLUS_PLUS)) {
+        if (match(Token.Type.PLUS_PLUS, Token.Type.MINUS_MINUS)) {
+            String operator = previous().text;
             if (expr instanceof VariableExpr) {
-                String name = ((VariableExpr)expr).getName();
-                return new UnaryExpr("++", expr, true); // true indicates postfix
+                return new UnaryExpr(operator, expr, true); // true indicates postfix
             }
-            throw new RuntimeException("Invalid increment target");
+            throw new RuntimeException("Invalid increment/decrement target");
         }
         return expr;
     }
