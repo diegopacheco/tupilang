@@ -25,6 +25,7 @@ Interesting things here:
  * Operators: +, -, *, /, %, ==, !=, <, >, <=, >=, % (modulo)
  * Create functions with def, comments with //
  * String concatenation, Bool concatenation
+ * Post Increment with ++ and --
  * Built-in functions: print, len
  * Val is immutable by default if want to mutate keep using val
  * Val automatically detect types.
@@ -41,12 +42,12 @@ Interesting things here:
   * No Implicits
   * No Scala Object
   * No Package Object
-8. PENDING - Might add in the future (TBD): 
+8. PENDING/Ideas - Might add in the future (TBD): 
   * Collections: Map
   * Pattern matching
   * Traits
   * More built-in functions: map, filter, reduce, etc.
-  * Classes (with no setters/getters, no inheritance)
+  * Classes (with no setters/getters, no inheritance, no static)
   * Very Simple Generics
   * Unit Test Framework (inside the box)
   * $(j"") string interpolation to call any java code
@@ -126,7 +127,7 @@ Enter the number of the sample to run (or 0 to cancel): 5
 
 --- Running sample: function.tupi ---
 Source code:
-def sum(a:Int, b:Int) int {
+def sum(a:Int, b:Int) Int {
   print("Running function sum ");
   val result =  a + b;
   return result;
