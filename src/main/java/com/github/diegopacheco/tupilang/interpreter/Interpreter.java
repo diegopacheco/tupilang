@@ -262,6 +262,12 @@ public class Interpreter {
             case "!=" -> {
                 return !Objects.equals(left, right);
             }
+            case "%" -> {
+                if (left instanceof Integer && right instanceof Integer) {
+                    return (Integer) left % (Integer) right;
+                }
+                throw new RuntimeException("Operands of '%' must be integers");
+            }
         }
         throw new RuntimeException("Unsupported operation: " + expr.getOperator());
     }
