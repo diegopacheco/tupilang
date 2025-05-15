@@ -66,7 +66,6 @@ public class LexerTest {
 
     @Test
     public void testKeywords() {
-        // It seems "int" and "void" are recognized as identifiers, not keywords
         Lexer lexer = new Lexer("val def if else return print");
         List<Token> tokens = lexer.scanTokens();
 
@@ -80,17 +79,14 @@ public class LexerTest {
 
     @Test
     public void testTypeKeywords() {
-        // Testing type keywords separately
-        Lexer lexer = new Lexer("int void");
+        Lexer lexer = new Lexer("val Int String Bool");
         List<Token> tokens = lexer.scanTokens();
 
-        // Update expectations to match actual lexer behavior
-        assertEquals(Token.Type.IDENTIFIER, tokens.get(0).type());
-        assertEquals("int", tokens.get(0).lexeme());
-
-        // The previous error indicates VOID_TYPE is recognized, but INT_TYPE isn't
-        assertEquals(Token.Type.VOID_TYPE, tokens.get(1).type());
-        assertEquals("void", tokens.get(1).lexeme());
+        assertEquals(Token.Type.VAL, tokens.get(0).getType());
+        assertEquals(Token.Type.INT_TYPE, tokens.get(1).getType());
+        assertEquals(Token.Type.STRING, tokens.get(2).getType());
+        assertEquals(Token.Type.BOOL_TYPE, tokens.get(3).getType());
+        assertEquals(Token.Type.EOF, tokens.get(4).getType());
     }
 
     @Test
