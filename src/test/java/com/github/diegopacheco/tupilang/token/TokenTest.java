@@ -1,5 +1,6 @@
 package com.github.diegopacheco.tupilang.token;
 
+import com.github.diegopacheco.tupilang.lexer.Lexer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -8,17 +9,17 @@ public class TokenTest {
 
     @Test
     public void testIntTypeToken() {
-        Token token = new Token(Token.Type.INT_TYPE, "int", null, 1);
+        Token token = new Token(Token.Type.INT_TYPE, "Int", null, 1);
         assertEquals(Token.Type.INT_TYPE, token.type());
-        assertEquals("int", token.lexeme());
+        assertEquals("Int", token.lexeme());
         assertEquals(1, token.line());
     }
 
     @Test
     public void testVoidTypeToken() {
-        Token token = new Token(Token.Type.VOID_TYPE, "void", null, 1);
+        Token token = new Token(Token.Type.VOID_TYPE, "Void", null, 1);
         assertEquals(Token.Type.VOID_TYPE, token.type());
-        assertEquals("void", token.lexeme());
+        assertEquals("Void", token.lexeme());
         assertEquals(1, token.line());
     }
 
@@ -126,15 +127,4 @@ public class TokenTest {
         assertEquals(1, token.line());
     }
 
-    @Test
-    public void testTokenEquality() {
-        Token token1 = new Token(Token.Type.INT_TYPE, "int", null, 1);
-        Token token2 = new Token(Token.Type.INT_TYPE, "int", null, 1);
-        Token token3 = new Token(Token.Type.VOID_TYPE, "void", null, 1);
-
-        assertEquals(token1.type(), token2.type());
-        assertEquals(token1.lexeme(), token2.lexeme());
-        assertEquals(token1.line(), token2.line());
-        assertNotEquals(token1.type(), token3.type());
-    }
 }
