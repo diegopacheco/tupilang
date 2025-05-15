@@ -1,4 +1,5 @@
 package com.github.diegopacheco.tupilang.ast;
+
 import java.util.List;
 
 public class ForStatement implements Stmt {
