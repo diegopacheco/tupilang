@@ -11,13 +11,19 @@ Interesting things here:
 3. Heavily inspired by Scala 3
 4. However, much more simple
 5. REPL
-6. So far supports:
+   * Type code and run on the fly
+   * Proper help function
+   * CTRL + D to exit or type `exit;`
+   * Can run samples in `samples` folder just type `run`
+   * `time` function to trace eecution time (ms)
+6. Tupilang So far supports:
  * Types: int, string, void, bool, array
  * Keywords: if, return
  * Create functions with def, comments with //
+ * String concatenation, bool concatenation
  * Built-in functions: print, len
 
-Tupilang binary: jar size it's only **37KB** <br/>
+Tupilang binary: jar size it's only **36KB** <br/>
 Created by Diego Pacheco in APRIL/2025.
 
 I wanted a simple version of Scala. But also simple and different. 
@@ -77,6 +83,34 @@ test
 20
 Diego
 :>
+:> run
+Available samples:
+  1. array.tupi
+  2. bool.tupi
+  3. comments.tupi
+  4. concat_bool.tupi
+  5. function.tupi
+  6. ifs.tupi
+  7. len.tupi
+  8. main.tupi
+  9. string_interpolation.tupi
+Enter the number of the sample to run (or 0 to cancel): 5
+
+--- Running sample: function.tupi ---
+Source code:
+def sum(a:Int, b:Int) int {
+  print("Running function sum ");
+  val result =  a + b;
+  return result;
+}
+print(sum(52,8));
+--- Output ---
+"Running function sum "
+60
+--- End of sample ---
+
+:>
+
 
 ```
 
@@ -119,7 +153,7 @@ test
 [INFO]
 [INFO] Results:
 [INFO]
-[INFO] Tests run: 127, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 130, Failures: 0, Errors: 0, Skipped: 0
 [INFO]
 [INFO]
 ```
