@@ -19,6 +19,7 @@ Interesting things here:
 6. Tupilang So far supports:
  * Types: Int, String, Void, Bool, array represented by []
  * Keywords: if, return
+ * Operators: +, -, *, /, %, ==, !=, <, >, <=, >=, % (modulo)
  * Create functions with def, comments with //
  * String concatenation, Bool concatenation
  * Built-in functions: print, len
@@ -163,7 +164,7 @@ test
 [INFO]
 [INFO] Results:
 [INFO]
-[INFO] Tests run: 130, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 131, Failures: 0, Errors: 0, Skipped: 0
 [INFO]
 [INFO]
 ```
