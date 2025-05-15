@@ -65,6 +65,13 @@ public class Lexer {
             case '%':
                 addToken(Token.Type.MODULO);
                 break;
+            case '|':
+                if (match('|')) {
+                    addToken(Token.Type.OR);
+                } else {
+                    addToken(Token.Type.PIPE);
+                }
+                break;
             case '*': addToken(Token.Type.STAR); break;
             case '-': addToken(Token.Type.MINUS); break;
             case ';': addToken(Token.Type.SEMICOLON); break;
