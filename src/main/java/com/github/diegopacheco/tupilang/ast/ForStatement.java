@@ -24,8 +24,8 @@ public class ForStatement implements Stmt {
     // Range-based for loop: for (int i : 1 to 10)
     public ForStatement(String varName, Expr start, Expr end, List<Stmt> body) {
         this.varName = varName;
-        this.initializer = start;
-        this.condition = end;
+        this.initializer = start;  // Start value stored in initializer
+        this.condition = end;      // End value stored in condition
         // Not used in range-based version
         this.increment = null;
         this.body = body;
