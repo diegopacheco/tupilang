@@ -20,10 +20,13 @@ public class Lexer {
         keywords.put("def", Token.Type.DEF);
         keywords.put("return", Token.Type.RETURN);
         keywords.put("Int", Token.Type.INT_TYPE);
-        keywords.put("void", Token.Type.VOID_TYPE);
-        keywords.put("bool", Token.Type.BOOL_TYPE);
+        keywords.put("Void", Token.Type.VOID_TYPE);
+        keywords.put("Bool", Token.Type.BOOL_TYPE);
+        keywords.put("String", Token.Type.STRING);
         keywords.put("true", Token.Type.TRUE);
         keywords.put("false", Token.Type.FALSE);
+        keywords.put("for", Token.Type.FOR);
+        keywords.put("to", Token.Type.TO);
     }
 
     public Lexer(String source) {
@@ -50,7 +53,14 @@ public class Lexer {
             case ']': addToken(Token.Type.RIGHT_BRACKET); break;
             case ',': addToken(Token.Type.COMMA); break;
             case '.': addToken(Token.Type.DOT); break;
-            case '+': addToken(Token.Type.PLUS); break;
+            case '+':
+                if (peek() == '+') {
+                    advance();
+                    addToken(Token.Type.PLUS_PLUS);
+                } else {
+                    addToken(Token.Type.PLUS);
+                }
+                break;
             case '*': addToken(Token.Type.STAR); break;
             case '-': addToken(Token.Type.MINUS); break;
             case ';': addToken(Token.Type.SEMICOLON); break;
