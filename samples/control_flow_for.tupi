@@ -1,0 +1,11 @@
+for (Int i: 0 to 10) {
+    if (i % 2 == 0) {
+        print("Even number: " + i);
+    }else {
+        print("Odd number: " + i);
+    }
+}
+
+for (Int i=0; i<10; i++) {
+    print("Number: " + i);
+}
