@@ -371,18 +371,13 @@ public class InterpreterTest {
         // }
         List<Stmt> program = new ArrayList<>();
 
-        // Create start and end expressions for the range
         LiteralIntExpr start = new LiteralIntExpr(0);
         LiteralIntExpr end = new LiteralIntExpr(5);
-
         List<Stmt> body = new ArrayList<>();
         body.add(new ExpressionStatement(new CallExpr("print", List.of(new VariableExpr("i")))));
-
-        // Use the range-based constructor: ForStatement(String, Expr, Expr, List<Stmt>)
         program.add(new ForStatement("i", start, end, body));
 
         interpreter.interpret(program);
-
         String output = outputStream.toString().trim();
         String[] lines = output.split("\\R");
         assertEquals("0", lines[0]);
