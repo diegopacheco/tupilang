@@ -435,4 +435,22 @@ public class InterpreterTest {
         assertEquals("1", outputStream.toString().trim());
     }
 
+    @Test
+    public void testArrayDeclaration() {
+        // Test for:
+        // val arr = [1, 2, 3];
+        // print(arr);
+        List<Stmt> program = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new ArrayLiteralExpr(Arrays.asList(
+                                new LiteralIntExpr(1),
+                                new LiteralIntExpr(2),
+                                new LiteralIntExpr(3)
+                        ))
+                )))
+        );
+        interpreter.interpret(program);
+        assertEquals("[1, 2, 3]", outputStream.toString().trim());
+    }
+
 }
