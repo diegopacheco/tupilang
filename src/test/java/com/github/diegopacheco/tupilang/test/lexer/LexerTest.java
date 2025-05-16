@@ -166,4 +166,134 @@ public class LexerTest {
         assertEquals(Token.Type.RIGHT_BRACKET, tokens.get(6).type());
         assertEquals(Token.Type.EOF, tokens.get(7).type());
     }
+
+    @Test
+    public void testRecognizingCharacter() {
+        Lexer lexer = new Lexer("!@#$%^&*()_+");
+        List<Token> tokens = lexer.scanTokens();
+
+        System.out.println("Tokens found: " + tokens.size());
+        for (Token token : tokens) {
+            System.out.println("Token: " + token.type() + ", Lexeme: " + token.lexeme());
+        }
+
+        boolean foundEOF = false;
+        for (Token token : tokens) {
+            if (token.type() == Token.Type.EOF) {
+                foundEOF = true;
+                break;
+            }
+        }
+
+        assertTrue(foundEOF, "Should contain an EOF token");
+
+        // Check if any of these are included as valid tokens in your lexer
+        boolean hasExclamation = false;
+        boolean hasParentheses = false;
+        boolean hasPlus = false;
+        for (Token token : tokens) {
+            if (token.type() == Token.Type.BANG) hasExclamation = true;
+            if (token.type() == Token.Type.LPAREN) hasParentheses = true;
+            if (token.type() == Token.Type.PLUS) hasPlus = true;
+        }
+
+        assertTrue(hasExclamation, "Should recognize ! character");
+        assertTrue(hasParentheses, "Should recognize parentheses characters");
+        assertTrue(hasPlus, "Should recognize + character");
+    }
+
+    @Test
+    public void testModulo() {
+        Lexer lexer = new Lexer("% foo {}");
+        List<Token> tokens = lexer.scanTokens();
+
+        assertEquals(Token.Type.MODULO, tokens.get(0).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(1).type());
+        assertEquals("foo", tokens.get(1).lexeme());
+        assertEquals(Token.Type.LBRACE, tokens.get(2).type());
+        assertEquals(Token.Type.RBRACE, tokens.get(3).type());
+        assertEquals(Token.Type.EOF, tokens.get(4).type());
+    }
+
+    @Test
+    public void testPlusPlus(){
+        Lexer lexer = new Lexer("++foo");
+        List<Token> tokens = lexer.scanTokens();
+
+        assertEquals(Token.Type.PLUS_PLUS, tokens.get(0).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(1).type());
+        assertEquals("foo", tokens.get(1).lexeme());
+        assertEquals(Token.Type.EOF, tokens.get(2).type());
+    }
+
+    @Test
+    public void testMinusMinus(){
+        Lexer lexer = new Lexer("--foo");
+        List<Token> tokens = lexer.scanTokens();
+
+        assertEquals(Token.Type.MINUS_MINUS, tokens.get(0).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(1).type());
+        assertEquals("foo", tokens.get(1).lexeme());
+        assertEquals(Token.Type.EOF, tokens.get(2).type());
+    }
+
+    @Test
+    public void testKeywordForCClassic(){
+        Lexer lexer = new Lexer("for (Int i = 0; i < 10; i++) {}");
+        List<Token> tokens = lexer.scanTokens();
+
+        assertEquals(Token.Type.FOR, tokens.get(0).type());
+        assertEquals(Token.Type.LPAREN, tokens.get(1).type());
+        assertEquals(Token.Type.INT_TYPE, tokens.get(2).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(3).type());
+        assertEquals("i", tokens.get(3).lexeme());
+        assertEquals(Token.Type.EQUAL, tokens.get(4).type());
+        assertEquals(Token.Type.NUMBER, tokens.get(5).type());
+        assertEquals(0, tokens.get(5).literal());
+        assertEquals(Token.Type.SEMICOLON, tokens.get(6).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(7).type());
+        assertEquals("i", tokens.get(7).lexeme());
+        assertEquals(Token.Type.LESS, tokens.get(8).type());
+        assertEquals(Token.Type.NUMBER, tokens.get(9).type());
+        assertEquals(10, tokens.get(9).literal());
+        assertEquals(Token.Type.SEMICOLON, tokens.get(10).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(11).type());
+        assertEquals("i", tokens.get(11).lexeme());
+        assertEquals(Token.Type.PLUS_PLUS, tokens.get(12).type());
+        assertEquals(Token.Type.RPAREN, tokens.get(13).type());
+        assertEquals(Token.Type.LBRACE, tokens.get(14).type());
+        assertEquals(Token.Type.RBRACE, tokens.get(15).type());
+    }
+
+    @Test
+    public void testKeywordForRange(){
+        Lexer lexer = new Lexer("for (Int i : 0 to 10)");
+        List<Token> tokens = lexer.scanTokens();
+
+        assertEquals(Token.Type.FOR, tokens.get(0).type());
+        assertEquals(Token.Type.LPAREN, tokens.get(1).type());
+        assertEquals(Token.Type.INT_TYPE, tokens.get(2).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(3).type());
+        assertEquals("i", tokens.get(3).lexeme());
+        assertEquals(Token.Type.COLON, tokens.get(4).type());
+        assertEquals(Token.Type.NUMBER, tokens.get(5).type());
+        assertEquals(0, tokens.get(5).literal());
+        assertEquals(Token.Type.TO, tokens.get(6).type());
+        assertEquals(Token.Type.NUMBER, tokens.get(7).type());
+        assertEquals(10, tokens.get(7).literal());
+        assertEquals(Token.Type.RPAREN, tokens.get(8).type());
+        assertEquals(Token.Type.EOF, tokens.get(9).type());
+    }
+
+    @Test
+    public void testOR() {
+        Lexer lexer = new Lexer("| foo");
+        List<Token> tokens = lexer.scanTokens();
+
+        assertEquals(Token.Type.PIPE, tokens.get(0).type());
+        assertEquals(Token.Type.IDENTIFIER, tokens.get(1).type());
+        assertEquals("foo", tokens.get(1).lexeme());
+        assertEquals(Token.Type.EOF, tokens.get(2).type());
+    }
+
 }
