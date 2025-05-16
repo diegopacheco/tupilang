@@ -340,13 +340,17 @@ public class InterpreterTest {
         //     print(i);
         // }
         List<Stmt> program = new ArrayList<>();
-        LiteralIntExpr start = new LiteralIntExpr(0);
-        LiteralIntExpr end = new LiteralIntExpr(5);
-        LiteralIntExpr increment = new LiteralIntExpr(1);
 
+        LiteralIntExpr start = new LiteralIntExpr(0);
+        BinaryExpr condition = new BinaryExpr(
+                new VariableExpr("i"),
+                "<=",
+                new LiteralIntExpr(5)
+        );
+        UnaryExpr increment = new UnaryExpr("++", new VariableExpr("i"), true);
         List<Stmt> body = new ArrayList<>();
         body.add(new ExpressionStatement(new CallExpr("print", List.of(new VariableExpr("i")))));
-        program.add(new ForStatement("i", start, end, increment, body));
+        program.add(new ForStatement("i", start, condition, increment, body));
 
         interpreter.interpret(program);
         String output = outputStream.toString().trim();
