@@ -189,12 +189,11 @@ test
 ```bash
 ./mvnw clean test
 ```
-
 ```
 [INFO]
 [INFO] Results:
 [INFO]
-[INFO] Tests run: 146, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 160, Failures: 0, Errors: 0, Skipped: 0
 [INFO]
 [INFO]
 ```
