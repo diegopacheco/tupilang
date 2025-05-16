@@ -240,5 +240,3 @@ Sure the core lang it would still have zero libs and deps and this it would be o
 2. Inspired by https://github.com/diegopacheco/writing-interpreter-in-go
 3. No Vibe Coding was used at all, but using IntelliJ with Copilot/Sonnet-3.7.
 4. It's easy to find bugs, every single thing need to be tested.
-
-
