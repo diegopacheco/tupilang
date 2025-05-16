@@ -194,7 +194,7 @@ test
 [INFO]
 [INFO] Results:
 [INFO]
-[INFO] Tests run: 131, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 132, Failures: 0, Errors: 0, Skipped: 0
 [INFO]
 [INFO]
 ```
