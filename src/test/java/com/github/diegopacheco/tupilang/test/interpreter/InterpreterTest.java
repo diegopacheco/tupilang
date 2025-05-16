@@ -453,4 +453,30 @@ public class InterpreterTest {
         assertEquals("[1, 2, 3]", outputStream.toString().trim());
     }
 
+    @Test
+    public void testArrayIndexAccess() {
+        // Test for:
+        // val arr = [1, 2, 3];
+        // print(arr[1]);
+        List<Stmt> program = new ArrayList<>();
+
+        program.add(new ValDeclaration("arr",
+                new ArrayLiteralExpr(Arrays.asList(
+                        new LiteralIntExpr(1),
+                        new LiteralIntExpr(2),
+                        new LiteralIntExpr(3)
+                ))
+        ));
+
+        program.add(new ExpressionStatement(new CallExpr("print", List.of(
+                new ArrayAccessExpr(
+                        new VariableExpr("arr"),
+                        new LiteralIntExpr(1)
+                )
+        ))));
+
+        interpreter.interpret(program);
+        assertEquals("2", outputStream.toString().trim());
+    }
+
 }
