@@ -49,16 +49,16 @@ public class InterpreterTest {
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
 
-        assertTrue(statements.size() == 1);
-        assertTrue(statements.get(0) instanceof ExpressionStatement);
+        assertEquals(1, statements.size());
+        assertInstanceOf(ExpressionStatement.class, statements.get(0));
 
         ExpressionStatement exprStmt = (ExpressionStatement)statements.get(0);
-        assertTrue(exprStmt.getExpression() instanceof CallExpr);
+        assertInstanceOf(CallExpr.class, exprStmt.getExpression());
 
         CallExpr callExpr = (CallExpr)exprStmt.getExpression();
         assertEquals("print", callExpr.getCallee());
-        assertTrue(callExpr.getArguments().size() == 1);
-        assertTrue(callExpr.getArguments().get(0) instanceof LiteralStringExpr);
+        assertEquals(1, callExpr.getArguments().size());
+        assertInstanceOf(LiteralStringExpr.class, callExpr.getArguments().get(0));
     }
 
     @Test
