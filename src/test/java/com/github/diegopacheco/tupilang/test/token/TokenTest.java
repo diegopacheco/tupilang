@@ -128,4 +128,116 @@ public class TokenTest {
         assertEquals(1, token.line());
     }
 
+    @Test
+    public void testMinusToken() {
+        Token token = new Token(Token.Type.MINUS, "-", null, 1);
+        assertEquals(Token.Type.MINUS, token.type());
+        assertEquals("-", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testPlusPlusToken() {
+        Token token = new Token(Token.Type.PLUS_PLUS, "++", null, 1);
+        assertEquals(Token.Type.PLUS_PLUS, token.type());
+        assertEquals("++", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testMinusMinusToken() {
+        Token token = new Token(Token.Type.MINUS_MINUS, "--", null, 1);
+        assertEquals(Token.Type.MINUS_MINUS, token.type());
+        assertEquals("--", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testModuloToken() {
+        Token token = new Token(Token.Type.MODULO, "%", null, 1);
+        assertEquals(Token.Type.MODULO, token.type());
+        assertEquals("%", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testPipeToken() {
+        Token token = new Token(Token.Type.PIPE, "|", null, 1);
+        assertEquals(Token.Type.PIPE, token.type());
+        assertEquals("|", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testOrToken() {
+        Token token = new Token(Token.Type.OR, "||", null, 1);
+        assertEquals(Token.Type.OR, token.type());
+        assertEquals("||", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testAndToken() {
+        Token token = new Token(Token.Type.AND, "&&", null, 1);
+        assertEquals(Token.Type.AND, token.type());
+        assertEquals("&&", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testLessToken() {
+        Token token = new Token(Token.Type.LESS, "<", null, 1);
+        assertEquals(Token.Type.LESS, token.type());
+        assertEquals("<", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testGreaterToken() {
+        Token token = new Token(Token.Type.GREATER, ">", null, 1);
+        assertEquals(Token.Type.GREATER, token.type());
+        assertEquals(">", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testLessEqualToken() {
+        Token token = new Token(Token.Type.LESS_EQUAL, "<=", null, 1);
+        assertEquals(Token.Type.LESS_EQUAL, token.type());
+        assertEquals("<=", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testGreaterEqualToken() {
+        Token token = new Token(Token.Type.GREATER_EQUAL, ">=", null, 1);
+        assertEquals(Token.Type.GREATER_EQUAL, token.type());
+        assertEquals(">=", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testEqualToken() {
+        Token token = new Token(Token.Type.EQUAL, "=", null, 1);
+        assertEquals(Token.Type.EQUAL, token.type());
+        assertEquals("=", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testRangeForToken() {
+        Token token = new Token(Token.Type.TO, "TO", null, 1);
+        assertEquals(Token.Type.TO, token.type());
+        assertEquals("TO", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
+    @Test
+    public void testBangToken() {
+        Token token = new Token(Token.Type.BANG, "!", null, 1);
+        assertEquals(Token.Type.BANG, token.type());
+        assertEquals("!", token.lexeme());
+        assertEquals(1, token.line());
+    }
+
 }
