@@ -332,4 +332,108 @@ public class InterpreterTest {
         assertEquals("true", lines[0]);
         assertEquals("false", lines[1]);
     }
+
+    @Test
+    public void testCClassicFor() {
+        // Test for:
+        // for (Int i = 0; i <= 5; i++) {
+        //     print(i);
+        // }
+        List<Stmt> program = new ArrayList<>();
+        LiteralIntExpr start = new LiteralIntExpr(0);
+        LiteralIntExpr end = new LiteralIntExpr(5);
+        LiteralIntExpr increment = new LiteralIntExpr(1);
+
+        List<Stmt> body = new ArrayList<>();
+        body.add(new ExpressionStatement(new CallExpr("print", List.of(new VariableExpr("i")))));
+        program.add(new ForStatement("i", start, end, increment, body));
+
+        interpreter.interpret(program);
+        String output = outputStream.toString().trim();
+        String[] lines = output.split("\\R");
+        assertEquals("0", lines[0]);
+        assertEquals("1", lines[1]);
+        assertEquals("2", lines[2]);
+        assertEquals("3", lines[3]);
+        assertEquals("4", lines[4]);
+        assertEquals("5", lines[5]);
+    }
+
+    @Test
+    public void testRangeFor() {
+        // Test for:
+        // for (Int i : 0 to 5) {
+        //     print(i);
+        // }
+        List<Stmt> program = new ArrayList<>();
+
+        // Create start and end expressions for the range
+        LiteralIntExpr start = new LiteralIntExpr(0);
+        LiteralIntExpr end = new LiteralIntExpr(5);
+
+        List<Stmt> body = new ArrayList<>();
+        body.add(new ExpressionStatement(new CallExpr("print", List.of(new VariableExpr("i")))));
+
+        // Use the range-based constructor: ForStatement(String, Expr, Expr, List<Stmt>)
+        program.add(new ForStatement("i", start, end, body));
+
+        interpreter.interpret(program);
+
+        String output = outputStream.toString().trim();
+        String[] lines = output.split("\\R");
+        assertEquals("0", lines[0]);
+        assertEquals("1", lines[1]);
+        assertEquals("2", lines[2]);
+        assertEquals("3", lines[3]);
+        assertEquals("4", lines[4]);
+    }
+
+    @Test
+    public void testUnaryExpressionPlusPlus() {
+        // Test for:
+        // val x = 5++;
+        // print(x);
+        List<Stmt> program = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        // Add the missing boolean parameter (true for postfix)
+                        new UnaryExpr("++", new LiteralIntExpr(5), true)
+                )))
+        );
+        interpreter.interpret(program);
+        assertEquals("6", outputStream.toString().trim());
+    }
+
+    @Test
+    public void testMinusMinus() {
+        // Test for:
+        // val x = 5--;
+        // print(x);
+        List<Stmt> program = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        // Add the missing boolean parameter (true for postfix)
+                        new UnaryExpr("--", new LiteralIntExpr(5), true)
+                )))
+        );
+        interpreter.interpret(program);
+        assertEquals("4", outputStream.toString().trim());
+    }
+
+    @Test
+    public void testModulo() {
+        // Test for:
+        // val x = 10 % 2;
+        // print(x);
+        List<Stmt> program = Collections.singletonList(
+                new ExpressionStatement(new CallExpr("print", List.of(
+                        new BinaryExpr(
+                                new LiteralIntExpr(10),
+                                "%",
+                                new LiteralIntExpr(3)
+                        )
+                )))
+        );
+        interpreter.interpret(program);
+        assertEquals("1", outputStream.toString().trim());
+    }
+
 }
